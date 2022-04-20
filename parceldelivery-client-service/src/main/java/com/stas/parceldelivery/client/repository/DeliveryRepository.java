@@ -6,16 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.stas.parceldelivery.client.domain.Delivery;
+import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 @Repository
-public interface DeliveryRepository extends CrudRepository<Delivery, String> {
+public interface DeliveryRepository extends CrudRepository<DeliveryOrder, String> {
 
-	@Query("select d from Delivery d where d.client=:client and d.status<:status")
-	public List<Delivery> findAllByClientAndStatusLessThan(String client, DeliveryStatus status);
+	@Query("select d from DeliveryOrder d where d.client=:client and d.status<:status")
+	public List<DeliveryOrder> findAllByClientAndStatusLessThan(String client, DeliveryStatus status);
 
-	public List<Delivery> findAllByClientAndStatus(String client, DeliveryStatus status);
+	public List<DeliveryOrder> findAllByClientAndStatus(String client, DeliveryStatus status);
 
-	public List<Delivery> findAllByClient(String userId);
+	public List<DeliveryOrder> findAllByClient(String userId);
 }

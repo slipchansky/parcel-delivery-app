@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
-import com.stas.parceldelivery.client.domain.Delivery;
+import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,7 @@ public class DeliveryRepositoryITest {
 	
 	@Test
 	public void testCreateDelivery() {
-		Delivery d = Delivery.builder()
+		DeliveryOrder d = DeliveryOrder.builder()
 				.client("test")
 				.status(DeliveryStatus.CREATED)
 				.addressFrom("home").build();
@@ -45,17 +45,17 @@ public class DeliveryRepositoryITest {
 	@Test
 	public void testFindAllByClientAndStatusLessThan() {
 		
-		repository.save(Delivery.builder()
+		repository.save(DeliveryOrder.builder()
 				.client("test")
 				.status(DeliveryStatus.CREATED)
 				.addressFrom("home").build());
 		
-		repository.save(Delivery.builder()
+		repository.save(DeliveryOrder.builder()
 				.client("test")
 				.status(DeliveryStatus.INRETURN)
 				.addressFrom("home").build());
 		
-		List<Delivery> found = repository.findAllByClientAndStatusLessThan("test", DeliveryStatus.INRETURN);
+		List<DeliveryOrder> found = repository.findAllByClientAndStatusLessThan("test", DeliveryStatus.INRETURN);
 		assertEquals(1, found.size());
 		found = repository.findAllByClientAndStatusLessThan("test", DeliveryStatus.FINISHED);
 		assertEquals(2, found.size());
@@ -66,17 +66,17 @@ public class DeliveryRepositoryITest {
 	@Test
 	public void testFindAllByClientAndStatus() {
 		
-		repository.save(Delivery.builder()
+		repository.save(DeliveryOrder.builder()
 				.client("test")
 				.status(DeliveryStatus.CREATED)
 				.addressFrom("home").build());
 		
-		repository.save(Delivery.builder()
+		repository.save(DeliveryOrder.builder()
 				.client("test")
 				.status(DeliveryStatus.INRETURN)
 				.addressFrom("home").build());
 		
-		List<Delivery> found = repository.findAllByClientAndStatus("test", DeliveryStatus.CREATED);
+		List<DeliveryOrder> found = repository.findAllByClientAndStatus("test", DeliveryStatus.CREATED);
 		assertEquals(1, found.size());
 		
 		found = repository.findAllByClientAndStatus("test", DeliveryStatus.INRETURN);

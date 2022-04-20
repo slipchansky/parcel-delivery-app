@@ -17,7 +17,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
-import com.stas.parceldelivery.client.domain.Delivery;
+import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.client.service.DeliveryService;
 import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
 import com.stas.parceldelivery.commons.amqp.utils.BindingUtil;

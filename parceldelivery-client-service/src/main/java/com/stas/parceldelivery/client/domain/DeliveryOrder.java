@@ -17,7 +17,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
+import com.stas.parceldelivery.commons.model.DeliveryOrderDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Delivery implements Serializable {
+public class DeliveryOrder implements Serializable {
 	
 	@Id
 	@GeneratedValue(generator="system-uuid")
@@ -55,6 +57,17 @@ public class Delivery implements Serializable {
     @PreUpdate
     public void preUpdate() {
         modified = LocalDateTime.now();
-    }	
+    }
+
+	public DeliveryOrderDTO toDto() {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.convertValue(this, DeliveryOrderDTO.class);
+	}
+
+	public static DeliveryOrder fromDto(DeliveryOrderDTO d) {
+		ObjectMapper mapper = new ObjectMapper();
+		DeliveryOrder o = new DeliveryOrder();
+		return mapper.convertValue(d, DeliveryOrder.class);
+	}	
 
 }

@@ -25,7 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import com.stas.parceldelivery.client.amqp.ClientListener;
 import com.stas.parceldelivery.client.amqp.ClientMessageTransmitter;
-import com.stas.parceldelivery.client.domain.Delivery;
+import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.client.service.DeliveryService;
 import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
 import com.stas.parceldelivery.commons.amqp.utils.BindingUtil;
@@ -129,7 +129,7 @@ public class AmqpExchangeITest {
 			return null;
 		}).when(dummy).doit();
 		
-		Delivery d = Delivery.builder().addressTo("two").addressFrom("one").client("c").status(DeliveryStatus.CREATED).build();
+		DeliveryOrder d = DeliveryOrder.builder().addressTo("two").addressFrom("one").client("c").status(DeliveryStatus.CREATED).build();
 		transmiter.deliveryUpdated(d);
 		
 		latch.await();

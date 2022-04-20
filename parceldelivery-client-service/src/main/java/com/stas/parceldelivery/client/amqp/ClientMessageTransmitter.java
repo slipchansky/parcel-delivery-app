@@ -10,7 +10,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.stas.parceldelivery.client.domain.Delivery;
+import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.commons.amqp.utils.BindingUtil;
 import com.stas.parceldelivery.commons.amqp.utils.ExchangeUtil;
 import com.stas.parceldelivery.commons.amqp.utils.QueueUtil;
@@ -49,7 +49,7 @@ public class ClientMessageTransmitter {
 				QueueNames.FROM_CLIENT);
 	}
 	
-	public void deliveryUpdated(Delivery delivery) {
+	public void deliveryUpdated(DeliveryOrder delivery) {
 		fromClientNotificationsTemplate.convertAndSend(delivery);
 	}
 

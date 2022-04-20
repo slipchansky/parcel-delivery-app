@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import lombok.AllArgsConstructor;
@@ -32,10 +33,12 @@ public class ErrorResponse {
 			return this;
 		}
 		
-		public ErrorResponseBuilder message(String message) {
-			super.message(Arrays.asList(message));
+		
+		public ErrorResponseBuilder messages(String ...messages ) {
+			super.message(Arrays.asList(messages));
 			return this;
 		}
+		
 
 		@Override
 		public ErrorResponseBuilder message(List<String> message) {
@@ -57,9 +60,14 @@ public class ErrorResponse {
 			return this;
 		}
 
-		public __ERB status(HttpStatus status) {
+		public ErrorResponseBuilder status(HttpStatus status) {
 			super.status(status.ordinal());
 			return this;
+		}
+
+
+		public ErrorResponseBuilder message(String message) {
+			return messages(message);
 		}
 		
 		
