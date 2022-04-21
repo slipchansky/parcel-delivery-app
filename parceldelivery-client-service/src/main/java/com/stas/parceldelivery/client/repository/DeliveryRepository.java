@@ -1,6 +1,7 @@
 package com.stas.parceldelivery.client.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,4 +19,6 @@ public interface DeliveryRepository extends CrudRepository<DeliveryOrder, String
 	public List<DeliveryOrder> findAllByClientAndStatus(String client, DeliveryStatus status);
 
 	public List<DeliveryOrder> findAllByClient(String userId);
+
+	public Optional<DeliveryOrder> findByIdAndClient(String id, String clientId);
 }

@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.publcapi.resources;
+package com.stas.parceldelivery.publcapi.rest;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -27,6 +28,9 @@ public abstract class BaseController {
 		HttpServletRequest request = 
 		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
 		                .getRequest();
+		HttpServletResponse response = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getResponse();
 		
 		
 		
@@ -39,10 +43,18 @@ public abstract class BaseController {
 		
 		CallContext authContext = CallContext.getInstance();
 		String correlationId = request.getHeader(ParceldeliveryHeaders.CORRELATION_ID);
-		if(!StringUtils.hasText(correlationId)) correlationId = UUID.randomUUID().toString(); 
+		String requestId = request.getHeader(ParceldeliveryHeaders.REQUEST_ID);
+		
+		
+		if(!StringUtils.hasText(correlationId)) correlationId = UUID.randomUUID().toString();
+		if(!StringUtils.hasText(requestId)) requestId = correlationId;
+		
 		authContext.setCorrelationId(correlationId);
+		authContext.setRequestId(requestId);
 		authContext.setUserId(userName);
 		authContext.setRoles(roles);
+		response.addHeader(ParceldeliveryHeaders.REQUEST_ID, requestId);
+		response.addHeader(ParceldeliveryHeaders.CORRELATION_ID, correlationId);
 		return authContext;
 	}
 	

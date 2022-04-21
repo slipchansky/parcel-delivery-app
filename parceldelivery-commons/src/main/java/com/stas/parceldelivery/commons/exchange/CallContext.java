@@ -11,6 +11,7 @@ public class CallContext {
 	private String userId;
 	private List<String> roles;
 	private String correlationId;
+	private String requestId;
 	 
 	public static CallContext getInstance() {
 		CallContext context = CONTEXT_HOLDER.get();

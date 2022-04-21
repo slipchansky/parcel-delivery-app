@@ -10,6 +10,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.stas.parceldelivery.client.amqp.ClientMessageTransmitter;
 import com.stas.parceldelivery.client.domain.DeliveryOrder;
@@ -18,10 +19,12 @@ import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 import com.stas.parceldelivery.commons.exceptions.BadRequestException;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
-import com.stas.parceldelivery.commons.model.DeliveryOrderDTO;
+import com.stas.parceldelivery.commons.model.DeliveryOrderRequestDTO;
+import com.stas.parceldelivery.commons.model.DeliveryOrderResponseDTO;
 import com.stas.parceldelivery.commons.model.UpdateDestinationRequest;
 
 import lombok.extern.slf4j.Slf4j;
+import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 @Service
 @Slf4j
@@ -36,27 +39,24 @@ public class DeliveryService {
 	
 	
 	@Transactional
-	public DeliveryOrderDTO create(String clientId, DeliveryOrderDTO d) {
-		if(d.getId()!=null) {
-			throw new BadRequestException("Your request shouldn't contain id");
-		}
-		d.setClient(clientId);
-		d.setStatus(DeliveryStatus.CREATED);
-		
-		DeliveryOrder result = deliveryRepository.save(DeliveryOrder.fromDto(d));
+	public DeliveryOrderResponseDTO create(String clientId, DeliveryOrderRequestDTO d) {
+		DeliveryOrder order = from(d).to(DeliveryOrder.class);
+		order.setClient(clientId);
+		order.setStatus(DeliveryStatus.CREATED);
+		DeliveryOrder result = deliveryRepository.save(order);
 		log.debug("New delivery created: {}", d);
 		messageTransmitter.deliveryUpdated(result);
 		log.debug("Delivery instance posted to queues: {}", d);
-		return result.toDto();
+		return from(result).to(DeliveryOrderResponseDTO.class);
 	}
 	
 
 	
 	@Transactional
-	public DeliveryOrderDTO update(String clientId, String id, UpdateDestinationRequest d) {
+	public DeliveryOrderResponseDTO update(String clientId, String id, UpdateDestinationRequest d) {
 		
-		if(d.getAddressTo()==null) {
-			// TODO. stas. cover by UT
+		if(!StringUtils.hasText(d.getAddressTo())) {
+			// TODOO stas. move to bean validation
 			log.debug("You should send new address in request body");
 			throw new BadRequestException("You should send new address in body");
 			
@@ -79,7 +79,7 @@ public class DeliveryService {
 		if (d.getAddressTo().equals(existing.getAddressTo())) {
 			// TODO. stas. cover by UT
 			// nothing to do
-			return existing.toDto();
+			return from(existing).to(DeliveryOrderResponseDTO.class);
 		}
 		
 		existing.setAddressTo(d.getAddressTo());
@@ -87,19 +87,26 @@ public class DeliveryService {
 		log.debug("Delivery updated: {}", d);
 		messageTransmitter.deliveryUpdated(result);
 		log.debug("Delivery instance posted to queues: {}", d);
-		return result.toDto();
+		return from(result).to(DeliveryOrderResponseDTO.class);
 	}
 
-	public List<DeliveryOrderDTO> findAll(String clientId) {
-		return deliveryRepository.findAllByClient(clientId).stream().map(DeliveryOrder::toDto).collect(Collectors.toList());
+	public List<DeliveryOrderResponseDTO> findAll(String clientId) {
+		return deliveryRepository
+				.findAllByClient(clientId).stream()
+				.map(d -> from(d).to(DeliveryOrderResponseDTO.class))
+				.collect(Collectors.toList());
 	}
 	
-	public List<DeliveryOrderDTO> findDeliveriesUpToStatus(String userId, DeliveryStatus toStatus) {
-		return deliveryRepository.findAllByClientAndStatusLessThan(userId, toStatus).stream().map(DeliveryOrder::toDto).collect(Collectors.toList());
+	public List<DeliveryOrderResponseDTO> findDeliveriesUpToStatus(String userId, DeliveryStatus toStatus) {
+		return deliveryRepository.findAllByClientAndStatusLessThan(userId, toStatus).stream()
+				.map(d -> from(d).to(DeliveryOrderResponseDTO.class))
+				.collect(Collectors.toList());
 	}
 	
-	public List<DeliveryOrderDTO> findDeliveriesByStatus(String userId, DeliveryStatus status) {
-		return deliveryRepository.findAllByClientAndStatus(userId, status).stream().map(DeliveryOrder::toDto).collect(Collectors.toList());
+	public List<DeliveryOrderResponseDTO> findDeliveriesByStatus(String userId, DeliveryStatus status) {
+		return deliveryRepository.findAllByClientAndStatus(userId, status).stream()
+				.map(d -> from(d).to(DeliveryOrderResponseDTO.class))
+				.collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -117,7 +124,7 @@ public class DeliveryService {
 	
 	@Transactional
 	// FIXME. stas. cover that by UTs
-	public DeliveryOrderDTO delete(String clientId, String id) {
+	public DeliveryOrderResponseDTO delete(String clientId, String id) {
 		Optional<DeliveryOrder> found = deliveryRepository.findById(id);
 		if (!found.isPresent()) {
 			throw new NotFoundException("No such delivery order");
@@ -137,7 +144,18 @@ public class DeliveryService {
 		messageTransmitter.deliveryUpdated(result);
 		log.debug("Delivery cancelation posted to queues: {}", result);
 		
-		return existing.toDto();
+		return from(existing).to(DeliveryOrderResponseDTO.class);
+	}
+
+
+
+	public DeliveryOrderResponseDTO findOne(String clientId, String id) {
+		Optional<DeliveryOrder> result = deliveryRepository.findByIdAndClient(id, clientId);
+		if(!result.isPresent()) {
+			throw new NotFoundException("There is no such delivery order");
+		}
+		DeliveryOrderResponseDTO order = from(result.get()).to(DeliveryOrderResponseDTO.class);
+		return order;
 	}
 
 }

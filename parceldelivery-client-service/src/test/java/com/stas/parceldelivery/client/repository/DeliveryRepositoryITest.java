@@ -84,6 +84,16 @@ public class DeliveryRepositoryITest {
 		
 	}
 	
+	@Test
+	public void testFindByIdAndClient() {
+		DeliveryOrder result = repository.save(DeliveryOrder.builder()
+				.client("test")
+				.status(DeliveryStatus.CREATED)
+				.addressFrom("home").build());
+		
+		assertTrue(repository.findByIdAndClient(result.getId(), "test").isPresent()); 
+	}
+	
 	
 
 }

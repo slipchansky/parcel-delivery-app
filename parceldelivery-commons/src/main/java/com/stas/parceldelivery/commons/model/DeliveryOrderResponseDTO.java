@@ -1,6 +1,6 @@
 package com.stas.parceldelivery.commons.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
@@ -9,16 +9,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeliveryOrderDTO {
+@Builder
+public class DeliveryOrderResponseDTO {
 	private String id;
 	private String client;
 	private String addressFrom;
 	private String addressTo;
+	private String clientPhone;
+	private String clientEmail;
 	private DeliveryStatus status;
-	LocalDateTime created;
-	LocalDateTime modified;
+	Date created;
+	Date modified;
 }

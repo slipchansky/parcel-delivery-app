@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.stas.parceldelivery.client.domain.UserDetails;
 import com.stas.parceldelivery.client.repository.UserDetailsRepository;
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
+import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,22 +23,30 @@ public class UserDetailsService {
 	
 	@Transactional
 	public UserDetailsDTO save(String id, UserDetailsDTO d) {
-		UserDetails userDetails = new UserDetails();
-		
+		UserDetails userDetails;
 		Optional<UserDetails> found = userDetailsRepository.findById(id);
-		
 		if(found.isPresent()) {
 			userDetails = found.get();
 		} else {
+			userDetails = new UserDetails();
 			userDetails.setId(id);
 			log.debug("New user details arrived for {}", id);
 		}
+		userDetails = from(userDetails).with(d);
+		validate(userDetails);
 		
-		userDetails.merge(d);
-		UserDetails result = userDetailsRepository.save(userDetails);
+		UserDetails result = userDetailsRepository.save(
+				userDetails
+				);
+		
 		log.debug("User updated: {}", d);
+		return from(result).to(UserDetailsDTO.class);
+	}
+
+
+	private void validate(UserDetails userDetails) {
+		// TODO stas. implement that
 		
-		return new UserDetailsDTO(result);
 	}
 
 
@@ -47,7 +56,7 @@ public class UserDetailsService {
 			// stas. it's up for discussion
 			return new UserDetailsDTO();
 		}
-		return new UserDetailsDTO(user.get());
+		return from(user.get()).to(UserDetailsDTO.class);
 	}
 
 }

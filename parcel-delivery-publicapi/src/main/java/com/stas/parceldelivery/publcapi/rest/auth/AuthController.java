@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.publcapi.resources.auth;
+package com.stas.parceldelivery.publcapi.rest.auth;
 
 import java.util.List;
 import java.util.stream.Collectors;
