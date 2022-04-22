@@ -1,0 +1,36 @@
+server:
+  port: 8001
+  
+spring:
+  datasource:
+    url : "jdbc:h2:mem:testdb"
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  rabbitmq:
+    host:  localhost
+    port:  5672
+    username: guest
+    password: guest
+    
+    auto-config:
+      enabled: true
+      
+      info-headers:
+        source-application: ${spring.application.name}
+      
+      exchanges:
+        exchange-one:
+          name: exchange-one
+      
+      queues:
+        queue-one:
+          name: queue-one
+      
+      bindings:
+        binding-one:
+          exchange: exchange-one
+          queue: queue-one
+          routing-key: rkey-one

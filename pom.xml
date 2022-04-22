@@ -14,6 +14,7 @@
 	 <module>parceldelivery-commons</module>
 	 <module>parceldelivery-client-service</module>
 	 <module>parceldelivery-user-service</module>
+	 <module>parceldelivery-office-service</module>
 	 <module>parcel-delivery-publicapi</module>
 	</modules>
 

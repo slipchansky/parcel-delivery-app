@@ -7,21 +7,26 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.stas.parceldelivery.publcapi.domain.User;
-import com.stas.parceldelivery.publcapi.repository.UserRepository;
+import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.publcapi.service.UserServiceClient;
+
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	UserRepository userRepository;
+	UserServiceClient userServiceClient;
 	
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findById(username)
-				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-		return UserDetailsImpl.fromUser(user);
+		try {
+			UserDTO user = userServiceClient.get(username);
+			return UserSecurityDetailsImpl.fromUser(user);
+		} catch (Exception e) {
+			throw new UsernameNotFoundException("User Not Found with username: " + username);
+		} 
+		
 	}
 
 }

@@ -41,6 +41,7 @@ public class DeliveryOrder implements Serializable {
 	private String addressTo;
 	private String clientPhone;
 	private String clientEmail;
+	private String location;
 	 
 	@Enumerated(EnumType.ORDINAL)
 	private DeliveryStatus status;

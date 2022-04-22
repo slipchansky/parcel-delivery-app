@@ -8,7 +8,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.stas.parceldelivery.client.amqp.ClientMessageTransmitter;
 import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.client.repository.DeliveryRepository;
-import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
+import com.stas.parceldelivery.commons.amqp.messages.OrderCreated;
+import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
+import com.stas.parceldelivery.commons.amqp.messages.OrderUpdated;
 import com.stas.parceldelivery.commons.exceptions.BadRequestException;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
 import com.stas.parceldelivery.commons.model.DeliveryOrderRequestDTO;
@@ -18,7 +20,6 @@ import com.stas.parceldelivery.commons.model.UpdateDestinationRequest;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -54,43 +55,71 @@ public class DeliveryServiceTest {
 	
 	UpdateDestinationRequest updateDestinationRequest = new UpdateDestinationRequest ("c");
 	
+	private void mockSave() {
+		when(deliveryRepository.save(any(DeliveryOrder.class))).thenReturn(orderEntity);
+	}
+	
+	private void mockFindByIdThenOptionalOf() {
+		when(deliveryRepository.findById(anyString())).thenReturn(Optional.of(orderEntity));
+	}
+	
+	private void mockFindByIdThenOptionalEmpty() {
+		when(deliveryRepository.findById(anyString())).thenReturn(Optional.empty());
+	}
+	
+	private DeliveryRepository verifyRepositoryCall() {
+		return verify(deliveryRepository, times(1));
+	}
+
+	private ClientMessageTransmitter verifyTransmitterCall() {
+		return verify(messageTransmitter, times(1));
+	}
+	
+	
+	
 
 	@Test
 	public void testCreate() {
-		when(deliveryRepository.save(any(DeliveryOrder.class))).thenReturn(orderEntity);
+		mockSave();
 		DeliveryOrderResponseDTO result = deliveryService.create(clientId, orderRequest);
 		assertEquals(source, result.getAddressFrom());
 		assertEquals(destination, result.getAddressTo());
-		verify(messageTransmitter, Mockito.times(1)).deliveryUpdated(Mockito.any(DeliveryOrder.class));
-		verify(deliveryRepository, Mockito.times(1)).save(any(DeliveryOrder.class));
+		verifyTransmitterCall().orderCreated(Mockito.any(OrderCreated.class));
+		verifyRepositoryCall().save(any(DeliveryOrder.class));
 	}
+	
+
 	
 	@Test
 	public void testUpdateSuccess() {
-		when(deliveryRepository.findById(anyString())).thenReturn(Optional.of(orderEntity));
-		when(deliveryRepository.save(any(DeliveryOrder.class))).thenReturn(orderEntity);
+		mockFindByIdThenOptionalOf();
+		mockSave();
 		deliveryService.update(clientId, "x", updateDestinationRequest);
-		verify(messageTransmitter, Mockito.times(1)).deliveryUpdated(Mockito.any(DeliveryOrder.class));
-		verify(deliveryRepository, Mockito.times(1)).save(any(DeliveryOrder.class));
+		verifyTransmitterCall().orderUpdated(Mockito.any(OrderUpdated.class));
+		verifyRepositoryCall().save(any(DeliveryOrder.class));
 	}
+
+
 	
 	@Test
 	public void testUpdateErrorNotFound() {
-		when(deliveryRepository.findById(anyString())).thenReturn(Optional.empty());
+		mockFindByIdThenOptionalEmpty();
 		NotFoundException thrown = Assertions.assertThrows(NotFoundException.class, ()->deliveryService.update(clientId, "1", updateDestinationRequest));
 		assertEquals("There is no such delivery", thrown.getMessage());
-		verify(messageTransmitter, Mockito.times(0)).deliveryUpdated(Mockito.any(DeliveryOrder.class));
+		verify(messageTransmitter, Mockito.times(0)).orderUpdated(Mockito.any(OrderUpdated.class));
 		verify(deliveryRepository, Mockito.times(0)).save(any(DeliveryOrder.class));
 	}
+
 	
 	@Test
 	public void testUpdateErrorBadRequestException() {
-		when(deliveryRepository.findById(anyString())).thenReturn(Optional.of(orderEntity));
+		mockFindByIdThenOptionalOf();
 		
 		BadRequestException thrown = Assertions.assertThrows(BadRequestException.class, ()->
-		deliveryService.update("x", "1", new UpdateDestinationRequest ()));
+			deliveryService.update("x", "1", new UpdateDestinationRequest ()));
+		
 		assertEquals("You should send new address in body", thrown.getMessage());
-		verify(messageTransmitter, Mockito.times(0)).deliveryUpdated(Mockito.any(DeliveryOrder.class));
+		verify(messageTransmitter, Mockito.times(0)).orderCreated(Mockito.any(OrderCreated.class));
 		verify(deliveryRepository, Mockito.times(0)).save(any(DeliveryOrder.class));
 	}
 	
@@ -108,12 +137,13 @@ public class DeliveryServiceTest {
 		// is tested on dao level
 	}
 	
+	@Test
 	public void testUpdateDeliverySuccess() {
-		when(deliveryRepository.findById(anyString())).thenReturn(Optional.of(orderEntity));
-		DeliveryStatusChanged c = DeliveryStatusChanged.builder().deliveryId("1").build();
+		OrderStatusChanged c = OrderStatusChanged.builder().id("1").build();
 		when(deliveryRepository.findById("1")).thenReturn(Optional.of(orderEntity));
-		deliveryService.updateDeliveryStatus(c);
-		verify(deliveryRepository, Mockito.times(1)).save(any(DeliveryOrder.class));
+		
+		deliveryService.updateStatus(c);
+		verifyRepositoryCall().save(any(DeliveryOrder.class));
 	}
 	
 	@Test

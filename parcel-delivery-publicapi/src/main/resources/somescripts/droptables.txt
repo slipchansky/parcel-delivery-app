@@ -1,9 +1,0 @@
-DROP table public.author CASCADE;
-DROP table public.document  CASCADE;
-DROP table public.category CASCADE;
-DROP table document_categories CASCADE;
-
-DROP table user_roles CASCADE;
-DROP table users CASCADE;
-DROP table databasechangelog CASCADE;
-DROP table databasechangeloglock CASCADE;

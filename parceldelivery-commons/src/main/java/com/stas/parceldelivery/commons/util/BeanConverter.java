@@ -26,6 +26,12 @@ public class BeanConverter {
 		return OBJECT_MAPPER.convertValue(source, destinationClass);
 	}
 	
+	public static <R> R copy(R source) {
+		return (R)OBJECT_MAPPER.convertValue(source, source.getClass());
+	}
+	
+	
+	
 	@AllArgsConstructor
 	public static class ___ConversionContext<R> {
 		private R bean;
@@ -53,6 +59,11 @@ public class BeanConverter {
 		
 		public R get() {
 			return bean;
+		}
+		
+		public ___ConversionContext<R> clone() {
+			this.bean = (R)BeanConverter.convert(bean, bean.getClass());
+			return this;
 		}
 		
 	}

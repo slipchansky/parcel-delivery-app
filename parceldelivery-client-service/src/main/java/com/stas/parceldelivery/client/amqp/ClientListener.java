@@ -1,30 +1,26 @@
 package com.stas.parceldelivery.client.amqp;
 
-import java.io.IOException;
+import static com.stas.parceldelivery.commons.constants.Queues.ClientLocationChanged;
+import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssigned;
+import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanhed;
 
+import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
-import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.client.service.DeliveryService;
-import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
-import com.stas.parceldelivery.commons.amqp.utils.BindingUtil;
-import com.stas.parceldelivery.commons.amqp.utils.ExchangeUtil;
+import com.stas.parceldelivery.commons.amqp.messages.LocationChanged;
+import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
+import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
 import com.stas.parceldelivery.commons.amqp.utils.QueueUtil;
-import com.stas.parceldelivery.commons.amqp.utils.TemplateUtil;
-import com.stas.parceldelivery.commons.constants.QueueNames;
 
 @Component
 public class ClientListener {
@@ -33,27 +29,42 @@ public class ClientListener {
 	DeliveryService deliveryService;
 	
 	@Autowired
-	AmqpAdmin amqpAdmin;
+	AmqpAdmin admin;
 	
 
 	@PostConstruct
 	public void init() {
-		
-		// listen to
-		QueueUtil.withQueue(amqpAdmin, QueueNames.CLIENT_QUEUE, true);
+		QueueUtil.withQueues(admin, true, ClientStatusChanhed, ClientLocationChanged, ClientOrderAssigned);
 		
 	}
 	
 	
-	@RabbitListener(queues = QueueNames.CLIENT_QUEUE)
-    public void onDeeliveryChamged(
-    		DeliveryStatusChanged payload, 
+	@RabbitListener(queues = ClientStatusChanhed)
+    public void onStatusChanged(
+    		OrderStatusChanged payload, 
     		Channel channel, 
     		@Header(AmqpHeaders.DELIVERY_TAG) long tag
     		) throws IOException {
-        deliveryService.updateDeliveryStatus(payload);
+        deliveryService.updateStatus(payload);
     }
 	
+	@RabbitListener(queues = ClientOrderAssigned)
+    public void onOrderAssigned(
+    		OrderAssignment payload, 
+    		Channel channel, 
+    		@Header(AmqpHeaders.DELIVERY_TAG) long tag
+    		) throws IOException {
+        deliveryService.deliveryAssigned(payload);
+    }
+	
+	@RabbitListener(queues = ClientLocationChanged)
+    public void onLocationChanged(
+    		LocationChanged payload, 
+    		Channel channel, 
+    		@Header(AmqpHeaders.DELIVERY_TAG) long tag
+    		) throws IOException {
+        deliveryService.updateLocation(payload);
+    }
 	
 	
 }

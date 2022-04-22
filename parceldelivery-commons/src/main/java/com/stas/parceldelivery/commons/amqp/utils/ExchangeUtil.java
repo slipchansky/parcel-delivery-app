@@ -1,8 +1,13 @@
 package com.stas.parceldelivery.commons.amqp.utils;
 
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+
+import java.util.stream.Stream;
+
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.BindingBuilder;
 
 public class ExchangeUtil {
 
@@ -17,5 +22,24 @@ public class ExchangeUtil {
 		admin.declareExchange(exchange);
 		return exchange;
 	}
+	
+	public static void exchangeWithTopicToQueues(
+			AmqpAdmin admin, boolean durable, 
+			String exchangeName, 
+			String routingKey, 
+			String ... queues 
+			) {
+		
+		ExchangeUtil.withTopicExchange(admin, exchangeName);
+		Stream.of(queues).forEach(qn -> {
+			Queue q = QueueUtil.withQueue(admin, qn, durable);
+			admin.declareBinding(BindingBuilder
+					   .bind(q)
+					   .to(ExchangeUtil.withTopicExchange(admin, exchangeName))
+					   .with(routingKey));
+		});
+		
+	}
+	
 	
 }

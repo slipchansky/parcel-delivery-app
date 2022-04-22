@@ -15,7 +15,12 @@ import org.springframework.util.StringUtils;
 import com.stas.parceldelivery.client.amqp.ClientMessageTransmitter;
 import com.stas.parceldelivery.client.domain.DeliveryOrder;
 import com.stas.parceldelivery.client.repository.DeliveryRepository;
-import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
+import com.stas.parceldelivery.commons.amqp.messages.LocationChanged;
+import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
+import com.stas.parceldelivery.commons.amqp.messages.OrderCancelled;
+import com.stas.parceldelivery.commons.amqp.messages.OrderCreated;
+import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
+import com.stas.parceldelivery.commons.amqp.messages.OrderUpdated;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 import com.stas.parceldelivery.commons.exceptions.BadRequestException;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
@@ -45,7 +50,7 @@ public class DeliveryService {
 		order.setStatus(DeliveryStatus.CREATED);
 		DeliveryOrder result = deliveryRepository.save(order);
 		log.debug("New delivery created: {}", d);
-		messageTransmitter.deliveryUpdated(result);
+		messageTransmitter.orderCreated(from(result).to(OrderCreated.class));
 		log.debug("Delivery instance posted to queues: {}", d);
 		return from(result).to(DeliveryOrderResponseDTO.class);
 	}
@@ -54,7 +59,6 @@ public class DeliveryService {
 	
 	@Transactional
 	public DeliveryOrderResponseDTO update(String clientId, String id, UpdateDestinationRequest d) {
-		
 		if(!StringUtils.hasText(d.getAddressTo())) {
 			// TODOO stas. move to bean validation
 			log.debug("You should send new address in request body");
@@ -85,7 +89,7 @@ public class DeliveryService {
 		existing.setAddressTo(d.getAddressTo());
 		DeliveryOrder result = deliveryRepository.save(existing);
 		log.debug("Delivery updated: {}", d);
-		messageTransmitter.deliveryUpdated(result);
+		messageTransmitter.orderUpdated( from(result).to(OrderUpdated.class) );
 		log.debug("Delivery instance posted to queues: {}", d);
 		return from(result).to(DeliveryOrderResponseDTO.class);
 	}
@@ -110,11 +114,11 @@ public class DeliveryService {
 	}
 
 	@Transactional
-	public void updateDeliveryStatus(DeliveryStatusChanged delta) {
-		Optional<DeliveryOrder> found = deliveryRepository.findById(delta.getDeliveryId());
+	public void updateStatus(OrderStatusChanged delta) {
+		Optional<DeliveryOrder> found = deliveryRepository.findById(delta.getId());
 		if(found.isPresent()) {
 		   DeliveryOrder delivery = found.get();
-		   delivery.setStatus(delta.getNewStatus());
+		   delivery.setStatus(delta.getStatus());
 		   // TODO. process possible errors
 		   deliveryRepository.save(delivery);
 		} else {
@@ -141,7 +145,7 @@ public class DeliveryService {
 		existing.setStatus(DeliveryStatus.CANCELED);
 		DeliveryOrder result = deliveryRepository.save(existing);
 		log.debug("Delivery cancellerd: {}", result);
-		messageTransmitter.deliveryUpdated(result);
+		messageTransmitter.orderCancelled(from(result).to(OrderCancelled.class));
 		log.debug("Delivery cancelation posted to queues: {}", result);
 		
 		return from(existing).to(DeliveryOrderResponseDTO.class);
@@ -156,6 +160,20 @@ public class DeliveryService {
 		}
 		DeliveryOrderResponseDTO order = from(result.get()).to(DeliveryOrderResponseDTO.class);
 		return order;
+	}
+
+
+
+	public void deliveryAssigned(OrderAssignment payload) {
+		// FIXME!!!
+		
+	}
+
+
+
+	public void updateLocation(LocationChanged payload) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

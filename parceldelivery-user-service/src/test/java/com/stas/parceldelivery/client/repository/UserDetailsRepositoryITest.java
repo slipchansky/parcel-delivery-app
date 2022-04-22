@@ -4,6 +4,8 @@ package com.stas.parceldelivery.client.repository;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import com.stas.parceldelivery.client.domain.UserDetails;
@@ -16,6 +18,7 @@ import javax.transaction.Transactional;
 @DataJpaTest
 @Transactional
 @Rollback
+@EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 public class UserDetailsRepositoryITest {
 	
 	@Autowired

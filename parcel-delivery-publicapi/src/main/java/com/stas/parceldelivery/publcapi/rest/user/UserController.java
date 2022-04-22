@@ -40,7 +40,7 @@ public class UserController extends BaseController {
 	public UserDetailsDTO get() {
 		return call(
 				(c) -> 
-				userService.get(c.getUserId()));
+				userService.getDetails(c.getUserId()));
 	}
 
 }

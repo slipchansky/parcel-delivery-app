@@ -9,55 +9,46 @@ import java.util.stream.Stream;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.stas.parceldelivery.publcapi.domain.Role;
-import com.stas.parceldelivery.publcapi.domain.User;
+import com.stas.parceldelivery.commons.enums.Role;
+import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.UserResponseDTO;
 import com.stas.parceldelivery.publcapi.dto.ResponseBase;
-import com.stas.parceldelivery.publcapi.dto.SignUpResponse;
-import com.stas.parceldelivery.publcapi.dto.SignupRequest;
 import com.stas.parceldelivery.publcapi.exceptions.InternalServerErrorRuntimeException;
 import com.stas.parceldelivery.publcapi.exceptions.UserAlreadyExistsException;
-import com.stas.parceldelivery.publcapi.repository.UserRepository;
+import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 @Service
 public class UserService {
 	
 	@Autowired
-	UserRepository userRepository;
+	UserServiceClient userServiceClient;
 	
-	private SignUpResponse createUser(SignupRequest userdto) throws UserAlreadyExistsException {
+	private UserResponseDTO createUser(UserDTO userdto) throws UserAlreadyExistsException {
 		// TODO. introduce bean validation
+		ResponseEntity<?> result = userServiceClient.exists( userdto );
+		if(result.getStatusCode()!=HttpStatus.NO_CONTENT)
+			throw new UserAlreadyExistsException ("User already exists");
+			
 		
-		if (userRepository.existsById(userdto.getUsername())  )
-			throw new UserAlreadyExistsException ("User with this name already exists");
-		
-		if (userRepository.existsByEmail(userdto.getEmail())  )
-			throw new UserAlreadyExistsException ("User with this email already exists");
 		
 		if ( CollectionUtils.isEmpty(userdto.getRoles()) ) {
-			userdto.setRoles(User.JUST_USER);
+			userdto.setRoles(UserDTO.JUST_USER);
 		} 
 		
-			
-		User user = userdto.toDomainUser();
-		
 		try {
-		  userRepository.save(user);
+			return userServiceClient.save(userdto);
 		} catch (Exception e) {
 			throw new InternalServerErrorRuntimeException(e);
 		}
-		
-		return SignUpResponse.builder()
-				.username(userdto.getUsername())
-				.email(userdto.getEmail())
-				.build();
 	}
 	
-	private void addUserRoles(SignupRequest u, Role ... moreRoles) {
+	private void addUserRoles(UserDTO u, Role ... moreRoles) {
 		if(u.getRoles()==null) {
 			u.setRoles(Stream.of(moreRoles).collect(Collectors.toSet()));
 		} else {
@@ -67,7 +58,7 @@ public class UserService {
 		}
 	}
 	
-	private void removeUserRoles(SignupRequest u, Role ... moreRoles) {
+	private void removeUserRoles(UserDTO u, Role ... moreRoles) {
 		if(u.getRoles()==null) {
 			u.setRoles(Stream.of(moreRoles).collect(Collectors.toSet()));
 		} else {
@@ -80,14 +71,14 @@ public class UserService {
 	
 	@Transactional
 	@Secured("ROLE_SUPER_ADMIN")
-	public SignUpResponse createAdmin(SignupRequest u) throws UserAlreadyExistsException {
+	public UserResponseDTO createAdmin(UserDTO u){
 		addUserRoles(u, Role.ROLE_ADMIN);
 		return createUser(u);
 	}
 
 	
 	@Transactional
-	public SignUpResponse createClient(SignupRequest u) throws UserAlreadyExistsException {
+	public UserResponseDTO createClient(UserDTO u) throws UserAlreadyExistsException {
 		addUserRoles(u, Role.ROLE_CLIENT);
 		removeUserRoles(u, Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN);
 		return createUser(u);

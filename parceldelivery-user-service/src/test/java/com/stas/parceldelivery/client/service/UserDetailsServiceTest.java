@@ -6,7 +6,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.stas.parceldelivery.client.domain.UserDetails;
 import com.stas.parceldelivery.client.repository.UserDetailsRepository;
-import com.stas.parceldelivery.commons.amqp.messages.DeliveryStatusChanged;
+import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
 import com.stas.parceldelivery.commons.exceptions.BadRequestException;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
 import com.stas.parceldelivery.commons.model.UpdateDestinationRequest;

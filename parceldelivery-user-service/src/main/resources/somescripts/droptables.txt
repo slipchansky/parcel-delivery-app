@@ -1,0 +1,4 @@
+DROP table user_roles CASCADE;
+DROP table users CASCADE;
+DROP table databasechangelog CASCADE;
+DROP table databasechangeloglock CASCADE;

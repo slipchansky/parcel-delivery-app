@@ -1,11 +1,8 @@
 package com.stas.parceldelivery.client.rest;
 
-import static com.stas.parceldelivery.commons.constants.UserRoutes.P_USER_ID;
 import static com.stas.parceldelivery.commons.constants.UserRoutes.ROOT;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +16,8 @@ public class UserDetailsController implements UserDetailsContract {
 	
 	@Autowired
 	UserDetailsService service;
+	
+	
 
 	@Override
 	public UserDetailsDTO update(String userId, UserDetailsDTO d) {
@@ -26,7 +25,7 @@ public class UserDetailsController implements UserDetailsContract {
 	}
 	
 	@Override
-	public UserDetailsDTO get(String userId) {
+	public UserDetailsDTO getDetails(String userId) {
 		return service.get(userId);
 	}
 

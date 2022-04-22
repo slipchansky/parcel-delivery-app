@@ -26,8 +26,8 @@ public class UserDetails extends UserDetailsDTO {
 	
 	@Id
 	private String id;
-	Date created;
-	Date modified;
+	private Date created;
+	private Date modified;
 	
 	public UserDetails(UserDetails d) {
 		super(d);
