@@ -15,8 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.stas.parceldelivery.admin.domain.Courier;
-import com.stas.parceldelivery.admin.domain.CourierStatus;
 import com.stas.parceldelivery.admin.repository.CourierRepository;
+import com.stas.parceldelivery.commons.enums.CourierStatus;
+import com.stas.parceldelivery.commons.model.CourierDTO;
 import com.stas.parceldelivery.commons.model.UserDTO;
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import static com.stas.parceldelivery.commons.util.BeanConverter.*;
@@ -106,11 +107,12 @@ public class CourierServiceTest {
 	
 	@Test
 	public void getCouriersTest() {
-		List<Courier> list = Arrays.asList(courier, from(courier).clone().update(c -> c.setUsername("secont")).get());
-		when(repository.findAllByStatus(CourierStatus.FREE)).thenReturn(list);
-		
-		List<Courier> found = service.getCouriers(CourierStatus.FREE);
-		assertEquals(list, found);
+		List<Courier> list = Arrays.asList(
+				courier, 
+				from(courier).clone().update(c -> c.setId("second")).get()
+				);
+		when(repository.findAllByStatus(CourierStatus.free)).thenReturn(list);
+		assertEquals(2,service.getCouriers(CourierStatus.free).size());
 		
 	}
 

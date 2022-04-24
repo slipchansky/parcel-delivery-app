@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
+import com.stas.parceldelivery.commons.enums.TaskState;
 import com.stas.parceldelivery.commons.model.DeliveryOrderResponseDTO;
 
 import lombok.AllArgsConstructor;

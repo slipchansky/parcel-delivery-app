@@ -20,6 +20,7 @@ import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
 import com.stas.parceldelivery.commons.amqp.messages.OrderUpdated;
 import com.stas.parceldelivery.commons.amqp.utils.QueueUtil;
 
+
 @Component
 public class TestListener {
 	

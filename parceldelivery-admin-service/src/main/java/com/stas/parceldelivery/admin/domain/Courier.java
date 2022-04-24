@@ -1,6 +1,8 @@
 package com.stas.parceldelivery.admin.domain;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -13,8 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.stas.parceldelivery.commons.enums.CourierStatus;
 
 import lombok.*;
 
@@ -25,11 +30,8 @@ import lombok.*;
 @Builder
 public class Courier {
 	@Id
-	@GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id;
 	
-	private String username;
 	private String firstName;
 	private String lastName;
 	private String city;
@@ -38,4 +40,13 @@ public class Courier {
 	private String phone;
 	@Enumerated(EnumType.STRING)
 	private CourierStatus status;
+	
+	@PrePersist
+    public void prePersist() {
+		if(id==null) {
+			// for simplifying test cases
+			id = UUID.randomUUID().toString();
+		}
+    }
+	
 }

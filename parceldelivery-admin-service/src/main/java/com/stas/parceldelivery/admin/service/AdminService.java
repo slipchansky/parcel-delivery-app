@@ -37,41 +37,36 @@ import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 public class AdminService {
 	
 	@Autowired
-	TaskRepository taskRepository;
+	TaskService tasks;
 	
 	@Autowired
-	AdminMessageTransmitter messageTransmitter;
-
+	TaskService couriers;
+	
+	
 	@Transactional
-	public void changeStatus(OrderStatusChanged payload) {
-		// TODO Auto-generated method stub
-		
+	public void createOrder(OrderCreated order) {
+		tasks.createTask(order);
+	}
+	
+	@Transactional
+	public void changeStatus(OrderStatusChanged delta) {
+		tasks.update(delta);
 	}
 
-
 	@Transactional
-	public void createOrder(OrderCreated payload) {
-		// TODO Auto-generated method stub
-		
+	public void updateOrder(OrderModification delta) {
+		tasks.update(delta);
 	}
 
-
 	@Transactional
-	public void updateOrder(OrderModification payload) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Transactional
-	public void cancelOrder(OrderCancelled payload) {
-		// TODO Auto-generated method stub
+	public void cancelOrder(OrderCancelled cancel) {
+		tasks.cancelOrder(cancel);
 		
 	}
 
 	@Transactional
-	public void updateLocation(LocationChanged payload) {
-		// TODO Auto-generated method stub
+	public void updateLocation(LocationChanged delta) {
+		tasks.update(delta);
 		
 	}
 

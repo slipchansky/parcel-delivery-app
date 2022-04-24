@@ -27,6 +27,8 @@ import lombok.*;
 public class DeliveryTaskTrace {
 	
 	@Id
+	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id;
 	
 	@ManyToOne

@@ -10,5 +10,5 @@ public class PublicApiRoutes {
 	
 	public static final String CLIENT_DELIVERIES = ROOT+CLIENT+DELIVERIES;
 	public static final String COURIER_DELIVERIES = ROOT+COURIER+DELIVERIES;
-	public static final String ADMIN_DELIVERIES = ROOT+ADMIN+DELIVERIES;
+	public static final String ADMIN_ALL = ROOT+ADMIN+DELIVERIES;
 }

@@ -25,6 +25,9 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.stas.parceldelivery.admin.amqp.AdminListener;
 import com.stas.parceldelivery.admin.amqp.AdminMessageTransmitter;
 import com.stas.parceldelivery.admin.service.AdminService;
@@ -51,8 +54,7 @@ public class AdminAmqpExchangeITest  {
 		    HibernateJpaAutoConfiguration.class,
 		    WebClientAutoConfiguration.class
 		})
-	public static class AdminAmqpTestApp{
-		
+	public static class AdminAmqpTestApp {
 	}
 
 	

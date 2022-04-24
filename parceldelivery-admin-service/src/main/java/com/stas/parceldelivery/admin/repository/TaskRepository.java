@@ -8,8 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.stas.parceldelivery.admin.domain.DeliveryTask;
-import com.stas.parceldelivery.admin.domain.TaskState;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
+import com.stas.parceldelivery.commons.enums.TaskState;
 
 @Repository
 public interface TaskRepository extends CrudRepository<DeliveryTask, String> {

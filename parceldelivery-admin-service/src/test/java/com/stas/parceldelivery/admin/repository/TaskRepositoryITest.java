@@ -10,12 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.stas.parceldelivery.admin.domain.Courier;
-import com.stas.parceldelivery.admin.domain.CourierStatus;
 
 import static com.stas.parceldelivery.admin.SampleBeans.*;
-import static com.stas.parceldelivery.admin.domain.CourierStatus.*;
+
 import com.stas.parceldelivery.admin.domain.DeliveryTask;
 import com.stas.parceldelivery.admin.repository.TaskRepository;
+import com.stas.parceldelivery.commons.enums.CourierStatus;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +25,8 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+
+import static com.stas.parceldelivery.commons.enums.CourierStatus.*;
 import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 @DataJpaTest
@@ -97,8 +99,8 @@ public class TaskRepositoryITest {
 	@Test
 	public void testCountTasksByAsseneeId() {
 		
-		Courier c1 = courep.save(copy(courier));
-		Courier c2 = courep.save(copy(courier));
+		Courier c1 = courep.save(courier("c1", CourierStatus.busy));
+		Courier c2 = courep.save(courier("c2", CourierStatus.busy));
 		
 		
 		repository.save(from(task).clone().update(x -> x.setAssignee(c1)).get());

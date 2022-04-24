@@ -14,13 +14,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.stas.parceldelivery.admin.domain.Courier;
-import com.stas.parceldelivery.admin.domain.CourierStatus;
 
 import static com.stas.parceldelivery.admin.SampleBeans.*;
-import static com.stas.parceldelivery.admin.domain.CourierStatus.*;
+
 import com.stas.parceldelivery.admin.domain.DeliveryTask;
 import com.stas.parceldelivery.admin.domain.DeliveryTaskTrace;
 import com.stas.parceldelivery.admin.repository.TaskRepository;
+import com.stas.parceldelivery.commons.enums.CourierStatus;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +30,8 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+
+import static com.stas.parceldelivery.commons.enums.CourierStatus.*;
 import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 

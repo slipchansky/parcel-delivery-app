@@ -39,7 +39,7 @@ public class BeanConverter {
 			return BeanConverter.convert(bean, clazz);
 		}
 		
-		public <R> R with(Object x) {
+		public <T> R with(T x) {
 			if(bean != null && x!=null) {
 			 Map dst = new BeanMap(bean);
 			 Object o = BeanConverter.convert(x, bean.getClass());
