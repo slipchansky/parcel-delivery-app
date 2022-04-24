@@ -42,7 +42,8 @@ public class BeanConverter {
 		public <R> R with(Object x) {
 			if(bean != null && x!=null) {
 			 Map dst = new BeanMap(bean);
-			 Map src = BeanConverter.convert(x, Map.class);
+			 Object o = BeanConverter.convert(x, bean.getClass());
+			 Map src = BeanConverter.convert(o, Map.class);
 			 dst.putAll(src);
 			}
 			return (R)bean;

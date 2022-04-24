@@ -31,52 +31,21 @@ public class TestListener {
 	
 	@PostConstruct
 	public void init() {
-		QueueUtil.withQueues(amqp, true, AdminOrderCreated, AdminOrderUpdated, CourierOrderUpdated, 
-				AdminOrderCancelled, CourierOrderCancelled);
+		QueueUtil.withQueues(amqp, true, ClientOrderAssigned, CourierOrderAssigned);
+
 	}
 	
-	@RabbitListener(queues = AdminOrderCreated)
-    public void adminOnCreated(OrderCreated payload) throws IOException {
+	@RabbitListener(queues = ClientOrderAssigned)
+    public void clientClientOrderAssigned(OrderAssignment payload) throws IOException {
 		service.doit();
     }
 	
-	@RabbitListener(queues = AdminOrderUpdated)
-    public void adminOnUpdated(OrderUpdated payload) throws IOException {
-		service.doit();
-    }
-	
-	
-	@RabbitListener(queues = AdminOrderCancelled)
-    public void onadminOnCancelles(OrderCancelled payload) throws IOException {
-		service.doit();
-    }
-	
-	@RabbitListener(queues = AdminStatusChanged)
-    public void onAdminStatusChanged(OrderStatusChanged payload) throws IOException {
-		service.doit();
-    }
-	
-	@RabbitListener(queues = AdminLocationChanged)
-    public void onAdminLocationChanged(LocationChanged payload) throws IOException {
-		service.doit();
-    }
-	
-	
-	@RabbitListener(queues = CourierOrderCancelled)
-    public void onCourierOrderCancelled(OrderCancelled payload) throws IOException {
-		service.doit();
-    }
-	
-	@RabbitListener(queues = CourierOrderUpdated)
-    public void courierOnUpdated(OrderUpdated payload) throws IOException {
-		service.doit();
-    }
-	
-
 	@RabbitListener(queues = CourierOrderAssigned)
-    public void onCourierOrderAssigned(OrderAssignment payload) throws IOException {
+    public void adminOnUpdated(OrderAssignment payload) throws IOException {
 		service.doit();
     }
+	
+	
 	
 
 }

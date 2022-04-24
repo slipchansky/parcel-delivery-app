@@ -2,11 +2,6 @@ package com.stas.parceldelivery.admin.amql;
 
 import org.springframework.stereotype.Service;
 
-@Service
-public class DummyService {
-	
-	public void doit() {
-	}
-	
-
+public interface DummyService {
+	public void doit();
 }

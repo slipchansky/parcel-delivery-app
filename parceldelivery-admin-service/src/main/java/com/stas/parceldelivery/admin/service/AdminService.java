@@ -19,6 +19,7 @@ import com.stas.parceldelivery.commons.amqp.messages.LocationChanged;
 import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
 import com.stas.parceldelivery.commons.amqp.messages.OrderCancelled;
 import com.stas.parceldelivery.commons.amqp.messages.OrderCreated;
+import com.stas.parceldelivery.commons.amqp.messages.OrderModification;
 import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
 import com.stas.parceldelivery.commons.amqp.messages.OrderUpdated;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
@@ -36,39 +37,45 @@ import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 public class AdminService {
 	
 	@Autowired
-	TaskRepository deliveryRepository;
+	TaskRepository taskRepository;
 	
 	@Autowired
 	AdminMessageTransmitter messageTransmitter;
 
+	@Transactional
 	public void changeStatus(OrderStatusChanged payload) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
+	@Transactional
 	public void createOrder(OrderCreated payload) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
-	public void updateOrder(OrderUpdated payload) {
+	@Transactional
+	public void updateOrder(OrderModification payload) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
+	@Transactional
 	public void cancelOrder(OrderCancelled payload) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
+	@Transactional
 	public void updateLocation(LocationChanged payload) {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 	
 	
 	

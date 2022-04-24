@@ -5,6 +5,6 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class OrderCancelled  extends OrderModification {
+public class OrderCancelled implements Serializable {
 	private String id;
 }

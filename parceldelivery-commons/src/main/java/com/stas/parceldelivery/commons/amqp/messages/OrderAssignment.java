@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderAssignment extends OrderModification {
+public class OrderAssignment implements Serializable {
 	private String id;
 	private String assignee;
 }

@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.admin.repository;
+package com.stas.parceldelivery.admin;
 
 import static com.stas.parceldelivery.admin.domain.CourierStatus.FREE;
 

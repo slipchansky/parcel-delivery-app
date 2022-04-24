@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderStatusChanged  extends OrderModification {
+public class OrderStatusChanged  implements Serializable {
 	private String id;
 	private DeliveryStatus status;
 }
