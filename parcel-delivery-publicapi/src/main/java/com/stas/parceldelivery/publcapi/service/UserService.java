@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +53,6 @@ public class UserService {
 	}
 	
 	
-	@Transactional
 	public UserResponseDTO createClient(UserDTO u) throws UserAlreadyExistsException {
 		Set<Role> roles = u.getRoles();
 		roles.remove(Role.ROLE_SUPER_ADMIN);

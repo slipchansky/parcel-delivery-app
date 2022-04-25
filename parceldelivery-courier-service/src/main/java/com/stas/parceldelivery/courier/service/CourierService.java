@@ -57,7 +57,7 @@ public class CourierService {
 	}
 
 
-	@Autowired
+	@Transactional
 	public void cancelCourierTask(OrderCancelled payload) {
 		Optional<CourierTask> found = tasks.findById(payload.getId());
 		if(!found.isPresent()) {

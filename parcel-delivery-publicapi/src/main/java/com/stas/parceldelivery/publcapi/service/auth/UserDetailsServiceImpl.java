@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.stas.parceldelivery.commons.model.UserDTO;
 import com.stas.parceldelivery.publcapi.service.UserServiceClient;
@@ -18,7 +17,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	UserServiceClient userServiceClient;
 	
 	@Override
-	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		try {
 			UserDTO user = userServiceClient.get(username);

@@ -35,6 +35,7 @@ problems.db
 **/log
 .mvn
 
+*.log
 *.lock
 **/.DS_Store
 **/*.jar
