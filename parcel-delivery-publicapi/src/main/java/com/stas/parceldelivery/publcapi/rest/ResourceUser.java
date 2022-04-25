@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.publcapi.rest.user;
+package com.stas.parceldelivery.publcapi.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,12 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.stas.parceldelivery.commons.constants.PublicApiRoutes;
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import com.stas.parceldelivery.publcapi.constants.GrantedTo;
-import com.stas.parceldelivery.publcapi.rest.BaseController;
 import com.stas.parceldelivery.publcapi.service.UserDetailsServiceClient;
  
 
 @RestController
 @RequestMapping(PublicApiRoutes.USERS)
+@PreAuthorize(GrantedTo.ANY)
 public class ResourceUser extends BaseController {
 	
 	@Autowired

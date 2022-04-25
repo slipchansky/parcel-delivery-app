@@ -1,8 +1,9 @@
-package com.stas.parceldelivery.publcapi.rest.admin;
+package com.stas.parceldelivery.publcapi.rest;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +16,12 @@ import com.stas.parceldelivery.commons.constants.PublicApiRoutes;
 import com.stas.parceldelivery.commons.model.CourierDTO;
 import com.stas.parceldelivery.commons.model.DeliveryTaskDTO;
 import com.stas.parceldelivery.commons.model.DeliveryTaskDetailsDTO;
-import com.stas.parceldelivery.publcapi.rest.BaseController;
+import com.stas.parceldelivery.publcapi.constants.GrantedTo;
 import com.stas.parceldelivery.publcapi.service.AdminServiceClient;
 
 @RestController
 @RequestMapping(PublicApiRoutes.ADMIN)
+@PreAuthorize(GrantedTo.ADMIN)
 public class ResourceAdmin extends BaseController {
 	
 	@Autowired

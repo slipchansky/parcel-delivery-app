@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.publcapi.rest.auth;
+package com.stas.parceldelivery.publcapi.rest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +21,6 @@ import com.stas.parceldelivery.commons.model.UserResponseDTO;
 import com.stas.parceldelivery.publcapi.config.jwt.JwtUtils;
 import com.stas.parceldelivery.publcapi.dto.JwtResponse;
 import com.stas.parceldelivery.publcapi.dto.LoginRequest;
-import com.stas.parceldelivery.publcapi.rest.BaseController;
 import com.stas.parceldelivery.publcapi.service.UserService;
 import com.stas.parceldelivery.publcapi.service.auth.UserSecurityDetailsImpl;
 

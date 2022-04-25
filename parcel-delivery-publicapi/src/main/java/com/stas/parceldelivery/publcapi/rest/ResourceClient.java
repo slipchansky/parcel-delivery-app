@@ -1,10 +1,11 @@
-package com.stas.parceldelivery.publcapi.rest.client;
+package com.stas.parceldelivery.publcapi.rest;
 
 import static com.stas.parceldelivery.commons.constants.ClientRoutes.*;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,12 @@ import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 import com.stas.parceldelivery.commons.model.DeliveryOrderRequestDTO;
 import com.stas.parceldelivery.commons.model.DeliveryOrderResponseDTO;
 import com.stas.parceldelivery.commons.model.UpdateDestinationRequest;
-import com.stas.parceldelivery.publcapi.rest.BaseController;
+import com.stas.parceldelivery.publcapi.constants.GrantedTo;
 import com.stas.parceldelivery.publcapi.service.ClientServiceClient;
 
 @RestController
 @RequestMapping(PublicApiRoutes.CLIENT)
+@PreAuthorize(GrantedTo.CLIENT)
 public class ResourceClient extends BaseController {
 	
 	@Autowired

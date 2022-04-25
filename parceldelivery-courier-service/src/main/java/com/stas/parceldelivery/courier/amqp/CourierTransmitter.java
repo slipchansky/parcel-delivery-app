@@ -68,5 +68,6 @@ public class CourierTransmitter {
 	public void locationChanged(LocationChanged delta) {
 		locationChanged.convertAndSend(delta);
 	}
+	
 
 }
