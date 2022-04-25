@@ -73,7 +73,7 @@ public class TestListener {
     }
 	
 
-	@RabbitListener(queues = CourierOrderAssigned)
+	@RabbitListener(queues = CourierTaskAssigned)
     public void onCourierOrderAssigned(OrderAssignment payload) throws IOException {
 		service.doit();
     }

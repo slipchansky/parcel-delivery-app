@@ -26,7 +26,7 @@ import com.stas.parceldelivery.publcapi.service.UserService;
 import com.stas.parceldelivery.publcapi.service.auth.UserSecurityDetailsImpl;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ResourceAuthentication extends BaseController {
 
@@ -61,12 +61,8 @@ public class ResourceAuthentication extends BaseController {
 		});
 	}
 
-	@PostMapping("/admin/new")
-	public UserResponseDTO registerAdmin(@RequestBody UserDTO signupRequest) {
-		return call(c -> userService.createAdmin(signupRequest));
-	}
 
-	@PostMapping("/client/new")
+	@PostMapping("/signup")
 	public UserResponseDTO registerClient(@RequestBody UserDTO signupRequest) {
 		return call(c -> userService.createClient(signupRequest));
 	}

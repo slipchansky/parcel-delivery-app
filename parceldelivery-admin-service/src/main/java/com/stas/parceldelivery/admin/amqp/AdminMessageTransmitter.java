@@ -10,6 +10,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.stas.parceldelivery.admin.domain.DeliveryTask;
+import com.stas.parceldelivery.commons.amqp.messages.CourierAssignedTask;
 import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
 import com.stas.parceldelivery.commons.amqp.utils.ExchangeUtil;
 import com.stas.parceldelivery.commons.amqp.utils.QueueUtil;
@@ -17,6 +19,7 @@ import com.stas.parceldelivery.commons.amqp.utils.TemplateUtil;
 import com.stas.parceldelivery.commons.constants.ExchangeName;
 import com.stas.parceldelivery.commons.constants.Routes;
 
+import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 @Component
 public class AdminMessageTransmitter {
@@ -27,27 +30,43 @@ public class AdminMessageTransmitter {
 	@Autowired
 	AmqpAdmin amqp;
 	
-	private RabbitTemplate courierAssignProducer;
+	private RabbitTemplate toClient;
+	private RabbitTemplate toCourier;
 	
 	
 	@PostConstruct
 	public void init() {
 		
-		QueueUtil.withQueues(amqp, true, ClientOrderAssigned,CourierOrderAssigned);
+		QueueUtil.withQueues(amqp, true, ClientOrderAssigned,CourierTaskAssigned);
 		
 		
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, 
 				ExchangeName.ADMIN_EXCHANGE,
 				Routes.OrderAssignment,
-				ClientOrderAssigned, CourierOrderAssigned
+				ClientOrderAssigned
+				);
+		
+		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, 
+				ExchangeName.ADMIN_EXCHANGE,
+				Routes.CourierTaskAssigned,
+				CourierTaskAssigned
 				);
 		
 		
-		courierAssignProducer = TemplateUtil.createTemplate(connectionFactory, ExchangeName.ADMIN_EXCHANGE, Routes.OrderAssignment);
+		toClient = TemplateUtil.createTemplate(connectionFactory, ExchangeName.ADMIN_EXCHANGE, Routes.OrderAssignment);
+		toCourier = TemplateUtil.createTemplate(connectionFactory, ExchangeName.ADMIN_EXCHANGE, Routes.CourierTaskAssigned);
 	}
 	
-	public void orderAssigned(OrderAssignment assignment) {
-		courierAssignProducer.convertAndSend(assignment);
+	public void orderAssigned(DeliveryTask task) {
+		toClient.convertAndSend(OrderAssignment.builder()
+				.id(task.getId())
+				.assignee(task.getId())
+				.build()
+				);
+		
+		CourierAssignedTask courierTask = from(task).to(CourierAssignedTask.class);
+		courierTask.setCourierId(task.getAssignee().getId());
+		toCourier.convertAndSend(courierTask);
 	}
 	
 

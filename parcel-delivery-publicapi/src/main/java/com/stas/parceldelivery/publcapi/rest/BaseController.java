@@ -22,40 +22,8 @@ import com.stas.parceldelivery.commons.exchange.CallContext;
 public abstract class BaseController {
 	
 	protected CallContext getCallContext() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		String userName = securityContext.getAuthentication().getName();
-
-		HttpServletRequest request = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-		HttpServletResponse response = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getResponse();
 		
-		
-		
-		List<String> roles = securityContext
-				.getAuthentication()
-				.getAuthorities()
-				.stream()
-				.map(GrantedAuthority::toString)
-				.collect(Collectors.toList());
-		
-		CallContext authContext = CallContext.getInstance();
-		String correlationId = request.getHeader(ParceldeliveryHeaders.CORRELATION_ID);
-		String requestId = request.getHeader(ParceldeliveryHeaders.REQUEST_ID);
-		
-		
-		if(!StringUtils.hasText(correlationId)) correlationId = UUID.randomUUID().toString();
-		if(!StringUtils.hasText(requestId)) requestId = correlationId;
-		
-		authContext.setCorrelationId(correlationId);
-		authContext.setRequestId(requestId);
-		authContext.setUserId(userName);
-		authContext.setRoles(roles);
-		response.addHeader(ParceldeliveryHeaders.REQUEST_ID, requestId);
-		response.addHeader(ParceldeliveryHeaders.CORRELATION_ID, correlationId);
-		return authContext;
+		return CallContext.getInstance();
 	}
 	
 	protected <R> R call( Function<CallContext, R> f) {

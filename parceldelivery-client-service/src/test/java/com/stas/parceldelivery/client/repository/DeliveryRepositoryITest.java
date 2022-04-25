@@ -52,10 +52,10 @@ public class DeliveryRepositoryITest {
 		
 		repository.save(DeliveryOrder.builder()
 				.client("test")
-				.status(DeliveryStatus.INRETURN)
+				.status(DeliveryStatus.CANCELED)
 				.addressFrom("home").build());
 		
-		List<DeliveryOrder> found = repository.findAllByClientAndStatusLessThan("test", DeliveryStatus.INRETURN);
+		List<DeliveryOrder> found = repository.findAllByClientAndStatusLessThan("test", DeliveryStatus.CANCELED);
 		assertEquals(1, found.size());
 		found = repository.findAllByClientAndStatusLessThan("test", DeliveryStatus.FINISHED);
 		assertEquals(2, found.size());
@@ -73,13 +73,13 @@ public class DeliveryRepositoryITest {
 		
 		repository.save(DeliveryOrder.builder()
 				.client("test")
-				.status(DeliveryStatus.INRETURN)
+				.status(DeliveryStatus.CANCELED)
 				.addressFrom("home").build());
 		
 		List<DeliveryOrder> found = repository.findAllByClientAndStatus("test", DeliveryStatus.CREATED);
 		assertEquals(1, found.size());
 		
-		found = repository.findAllByClientAndStatus("test", DeliveryStatus.INRETURN);
+		found = repository.findAllByClientAndStatus("test", DeliveryStatus.CANCELED);
 		assertEquals(1, found.size());
 		
 	}

@@ -23,43 +23,43 @@ import com.stas.parceldelivery.publcapi.rest.BaseController;
 import com.stas.parceldelivery.publcapi.service.ClientServiceClient;
 
 @RestController
-@RequestMapping(PublicApiRoutes.CLIENT_DELIVERIES)
+@RequestMapping(PublicApiRoutes.CLIENT)
 public class ResourceClient extends BaseController {
 	
 	@Autowired
 	ClientServiceClient clientService;
 
-	@PostMapping(ALL)
+	@PostMapping(DELIVERIES_ALL)
 	public DeliveryOrderResponseDTO create(@RequestBody DeliveryOrderRequestDTO d) {
 		return call(c -> clientService.create(c.getUserId(), d));
 	}
 
-	@PutMapping(SINGLE)
+	@PutMapping(DELIVERIES_SINGLE)
 	public DeliveryOrderResponseDTO updateDestination(@PathVariable(P_DELIVERYID)String id, @RequestBody UpdateDestinationRequest d) {
 		return call(c -> clientService.updateDestination(c.getUserId(), id, d));
 	}
 
-	@GetMapping(ALL)
+	@GetMapping(DELIVERIES_ALL)
 	public List<DeliveryOrderResponseDTO> findAll() {
 		return call(c -> clientService.findAll(c.getUserId()));
 	}
 
-	@GetMapping(STATUSLESSTHAN)
+	@GetMapping(DELIVERIES_STATUSLESSTHAN)
 	public List<DeliveryOrderResponseDTO> findDeliveriesUpToStatus(@PathVariable(P_STATUS) DeliveryStatus status) {
 		return call(c -> clientService.findDeliveriesUpToStatus(c.getUserId(), status));
 	}
 
-	@GetMapping(STATUSIS)
+	@GetMapping(DELIVERIES_STATUSIS)
 	public List<DeliveryOrderResponseDTO> findDeliveriesByStatus(@PathVariable(P_STATUS) DeliveryStatus status) {
 		return call(c -> clientService.findDeliveriesByStatus(c.getUserId(), status));
 	}
 
-	@DeleteMapping(SINGLE)
+	@DeleteMapping(DELIVERIES_SINGLE)
 	public DeliveryOrderResponseDTO delete(@PathVariable(P_DELIVERYID) String id) {
 		return call(c -> clientService.dismiss(c.getUserId(), id));
 	}
 
-	@GetMapping(SINGLE)
+	@GetMapping(DELIVERIES_SINGLE)
 	public DeliveryOrderResponseDTO getSingle(@PathVariable(P_DELIVERYID) String id) {
 		return call(c -> clientService.getSingle(c.getUserId(), id));
 	}

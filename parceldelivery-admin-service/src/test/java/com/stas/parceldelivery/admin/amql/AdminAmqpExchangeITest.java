@@ -25,14 +25,13 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import com.stas.parceldelivery.admin.amqp.AdminListener;
 import com.stas.parceldelivery.admin.amqp.AdminMessageTransmitter;
+import com.stas.parceldelivery.admin.domain.Courier;
+import com.stas.parceldelivery.admin.domain.DeliveryTask;
 import com.stas.parceldelivery.admin.service.AdminService;
 import com.stas.parceldelivery.commons.amqp.messages.LocationChanged;
-import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
 import com.stas.parceldelivery.commons.amqp.messages.OrderCancelled;
 import com.stas.parceldelivery.commons.amqp.messages.OrderCreated;
 import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
@@ -230,8 +229,12 @@ public class AdminAmqpExchangeITest  {
 	public void testBothClientAndCourierSee_OrderAssigned () throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch (2);
 		mockOnDummyCall(latch);
+		DeliveryTask task = new DeliveryTask().builder()
+				.id("t1")
+				.assignee(Courier.builder().id("a1").build())
+				.build();
 		
-		transmiter.orderAssigned(new OrderAssignment());
+		transmiter.orderAssigned(task);
 		latch.await(1, TimeUnit.SECONDS);
 		verifyDummyCalled(2);
 	}

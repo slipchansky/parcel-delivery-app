@@ -3,6 +3,7 @@ package com.stas.parceldelivery.publcapi.rest.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +19,7 @@ import com.stas.parceldelivery.publcapi.rest.BaseController;
 import com.stas.parceldelivery.publcapi.service.AdminServiceClient;
 
 @RestController
-@RequestMapping(PublicApiRoutes.ADMIN_ALL)
+@RequestMapping(PublicApiRoutes.ADMIN)
 public class ResourceAdmin extends BaseController {
 	
 	@Autowired
@@ -29,22 +30,27 @@ public class ResourceAdmin extends BaseController {
 		return call(c -> adminService.registerCourier(userId)) ;
 	}
 
+	@GetMapping(AdminRoutes.COURIERS)
 	public List<CourierDTO> getAllCouriers() {
 		return call(c -> adminService.getAllCouriers());
 	}
 
+	@GetMapping(AdminRoutes.COURIERS_FREE)
 	public List<CourierDTO> getFreeCouriers() {
 		return call(c -> adminService.getFreeCouriers());
 	}
 
+	@GetMapping(AdminRoutes.COURIERS_BUSY)
 	public List<CourierDTO> getBusyCouriers() {
 		return call(c -> adminService.getBusyCouriers());
 	}
 
+	@GetMapping(AdminRoutes.TASKS)
 	public List<DeliveryTaskDTO> getAllTasks() {
 		return call(c -> adminService.getAllTasks());
 	}
 
+	@GetMapping(AdminRoutes.TASKS_UNASSIGNED)
 	public List<DeliveryTaskDTO> getUnassignedTasks() {
 		return call(c -> adminService.getUnassignedTasks());
 	}

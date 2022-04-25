@@ -5,7 +5,7 @@ import static com.stas.parceldelivery.commons.constants.Queues.AdminStatusChange
 import static com.stas.parceldelivery.commons.constants.Queues.ClientLocationChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssigned;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanhed;
-import static com.stas.parceldelivery.commons.constants.Queues.CourierOrderAssigned;
+import static com.stas.parceldelivery.commons.constants.Queues.CourierTaskAssigned;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -98,7 +98,7 @@ public class AmqpExchangeITest {
 
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.ADMIN_EXCHANGE, Routes.OrderAssignment,
 				/* tp */
-				ClientOrderAssigned, CourierOrderAssigned);
+				ClientOrderAssigned, CourierTaskAssigned);
 
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.COURIER_EXCHANGE, Routes.OrderStatusChanged,
 				/* tp */

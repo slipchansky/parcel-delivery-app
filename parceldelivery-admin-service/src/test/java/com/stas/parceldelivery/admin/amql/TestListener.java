@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.stas.parceldelivery.admin.domain.DeliveryTask;
+import com.stas.parceldelivery.commons.amqp.messages.CourierAssignedTask;
 import com.stas.parceldelivery.commons.amqp.messages.LocationChanged;
 import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
 import com.stas.parceldelivery.commons.amqp.messages.OrderCancelled;
@@ -32,7 +33,7 @@ public class TestListener {
 	
 	@PostConstruct
 	public void init() {
-		QueueUtil.withQueues(amqp, true, ClientOrderAssigned, CourierOrderAssigned);
+		QueueUtil.withQueues(amqp, true, ClientOrderAssigned, CourierTaskAssigned);
 
 	}
 	
@@ -41,8 +42,8 @@ public class TestListener {
 		service.doit();
     }
 	
-	@RabbitListener(queues = CourierOrderAssigned)
-    public void adminOnUpdated(OrderAssignment payload) throws IOException {
+	@RabbitListener(queues = CourierTaskAssigned)
+    public void onCourierOrderAssigned(CourierAssignedTask payload) throws IOException {
 		service.doit();
     }
 	

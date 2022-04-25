@@ -131,10 +131,9 @@ public class TaskService {
 		task = tasks.save(task);
 		addTrace(task);
 		
-		OrderAssignment.builder()
-			.id(task.getId())
-			.assignee(courierId);
-		transmitter.orderAssigned(from(task).to(OrderAssignment.class));
+		
+		
+		transmitter.orderAssigned(task);
 		return from(task).to(DeliveryTaskDTO.class);
 	}
 

@@ -3,7 +3,7 @@ package com.stas.parceldelivery.commons.contracts;
 import static com.stas.parceldelivery.commons.constants.UserRoutes.BYROLE;
 import static com.stas.parceldelivery.commons.constants.UserRoutes.P_ROLE;
 import static com.stas.parceldelivery.commons.constants.UserRoutes.P_USER_ID;
-import static com.stas.parceldelivery.commons.constants.UserRoutes.USER;
+import static com.stas.parceldelivery.commons.constants.UserRoutes.*;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,10 +28,10 @@ public interface UsersContract {
 	@GetMapping(USER)
 	public UserDTO get(@PathVariable(P_USER_ID) String userId);
 	
-	@RequestMapping(value = USER, method = RequestMethod.HEAD)
-	public ResponseEntity<?> exists(UserDTO user);
+	@RequestMapping(value = USERS, method = RequestMethod.HEAD)
+	public ResponseEntity<?> headOfUserExists(@RequestParam(P_USER_ID) String userId, @RequestParam(P_USER_EMAIL) String email);
 
-	@PostMapping(USER)
-	public UserResponseDTO save(UserDTO user);
+	@PostMapping(USERS)
+	public UserResponseDTO save(@RequestBody UserDTO user);
 
 }

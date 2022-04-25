@@ -7,4 +7,5 @@ public class Routes {
 	public final static String OrderCancelled = "OrderCancelled";
 	public final static String OrderStatusChanged = "OrderStatusChanged";
 	public final static String OrderUpdated = "OrderUpdated";
+	public static final String CourierTaskAssigned = "CourierTaskAssigned";
 }

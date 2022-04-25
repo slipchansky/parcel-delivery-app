@@ -33,8 +33,8 @@ public class UsersController implements UsersContract {
 	}
 
 	@Override
-	public ResponseEntity<?> exists(UserDTO user) {
-		if(uservice.exists(user)) return ResponseEntity.noContent().build();
+	public ResponseEntity<?> headOfUserExists(String username, String email) {
+		if(uservice.exists(username, email)) return ResponseEntity.noContent().build();
 		return ResponseEntity.notFound().build();
 	}
 

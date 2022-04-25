@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -29,10 +30,13 @@ public class UserService {
 	@Autowired
 	UserServiceClient userServiceClient;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	private UserResponseDTO createUser(UserDTO userdto) throws UserAlreadyExistsException {
 		// TODO. introduce bean validation
-		ResponseEntity<?> result = userServiceClient.exists( userdto );
-		if(result.getStatusCode()!=HttpStatus.NO_CONTENT)
+		
+		if(userServiceClient.userExists( userdto.getUsername(), userdto.getEmail()))
 			throw new UserAlreadyExistsException ("User already exists");
 			
 		
@@ -42,45 +46,18 @@ public class UserService {
 		} 
 		
 		try {
+			userdto.setPassword(passwordEncoder.encode(userdto.getPassword()));
 			return userServiceClient.save(userdto);
 		} catch (Exception e) {
 			throw new InternalServerErrorRuntimeException(e);
 		}
 	}
 	
-	private void addUserRoles(UserDTO u, Role ... moreRoles) {
-		if(u.getRoles()==null) {
-			u.setRoles(Stream.of(moreRoles).collect(Collectors.toSet()));
-		} else {
-			Set<Role> roles = new HashSet<>(u.getRoles());
-			roles.addAll(Arrays.asList(moreRoles));
-			u.setRoles(roles);
-		}
-	}
-	
-	private void removeUserRoles(UserDTO u, Role ... moreRoles) {
-		if(u.getRoles()==null) {
-			u.setRoles(Stream.of(moreRoles).collect(Collectors.toSet()));
-		} else {
-			Set<Role> roles = new HashSet<>(u.getRoles());
-			roles.addAll(Arrays.asList(moreRoles));
-			u.setRoles(roles);
-		}
-	}
-	
-	
-	@Transactional
-	@Secured("ROLE_SUPER_ADMIN")
-	public UserResponseDTO createAdmin(UserDTO u){
-		addUserRoles(u, Role.ROLE_ADMIN);
-		return createUser(u);
-	}
-
 	
 	@Transactional
 	public UserResponseDTO createClient(UserDTO u) throws UserAlreadyExistsException {
-		addUserRoles(u, Role.ROLE_CLIENT);
-		removeUserRoles(u, Role.ROLE_SUPER_ADMIN, Role.ROLE_ADMIN);
+		Set<Role> roles = u.getRoles();
+		roles.remove(Role.ROLE_SUPER_ADMIN);
 		return createUser(u);
 	}
 

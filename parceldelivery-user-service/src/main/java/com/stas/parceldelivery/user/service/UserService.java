@@ -42,14 +42,14 @@ public class UserService {
 				throw new AlreadyExistsException("User with such email already exists");
 			}
 			
-			user = from(found).to(User.class);
+			user = from(dto).to(User.class);
 		}
 		user = repository.save(user);
 		return from(user).to(UserResponseDTO.class);
 	}
 	
-	public boolean exists(UserDTO user) {
-		return repository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
+	public boolean exists(String username, String email) {
+		return repository.existsByUsernameOrEmail(username, email);
 	}
 	
 	
