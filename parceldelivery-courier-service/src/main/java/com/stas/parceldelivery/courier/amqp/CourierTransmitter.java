@@ -40,14 +40,14 @@ public class CourierTransmitter {
 	public void init() {
 		
 		QueueUtil.withQueues(amqp, true, 
-				AdminStatusChanged, ClientStatusChanhed, AdminLocationChanged, ClientLocationChanged
+				AdminStatusChanged, ClientStatusChanged, AdminLocationChanged, ClientLocationChanged
 				);
 		
 		
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, 
 				ExchangeName.COURIER_EXCHANGE,
 				Routes.OrderStatusChanged,
-				AdminStatusChanged, ClientStatusChanhed
+				AdminStatusChanged, ClientStatusChanged
 				);
 		
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, 

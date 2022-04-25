@@ -7,7 +7,7 @@ import static com.stas.parceldelivery.commons.constants.Queues.AdminOrderUpdated
 import static com.stas.parceldelivery.commons.constants.Queues.AdminStatusChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientLocationChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssigned;
-import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanhed;
+import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanged;
 
 import java.io.IOException;
 

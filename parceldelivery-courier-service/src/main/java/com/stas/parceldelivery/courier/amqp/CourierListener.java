@@ -42,7 +42,7 @@ public class CourierListener {
 	
 	
 	
-	@RabbitListener(queues = ClientOrderAssigned)
+	@RabbitListener(queues = CourierTaskAssigned)
     public void onOrderAssigned(
     		CourierAssignedTask payload, 
     		Channel channel, 

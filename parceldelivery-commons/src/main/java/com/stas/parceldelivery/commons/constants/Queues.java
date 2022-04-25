@@ -11,7 +11,8 @@ public class Queues {
 	public final static String AdminStatusChanged = "AdminStatusChanged";
 	public final static String ClientLocationChanged = "ClientLocationChanged";
 	public final static String ClientOrderAssigned = "ClientOrderAssigned";
-	public final static String ClientStatusChanhed = "ClientStatusChanhed";
+	
+	public final static String ClientStatusChanged = "ClientStatusChanged";
 	public final static String CourierTaskAssigned = "CourierTaskAssigned";
 	public final static String CourierOrderCancelled = "CourierOrderCancelled";
 	public final static String CourierOrderUpdated = "CourierOrderUpdated";
@@ -19,6 +20,6 @@ public class Queues {
 
 	
 	public static List<String> all() {
-		return Arrays.asList(AdminOrderCreated, AdminLocationChanged ,AdminOrderCancelled,AdminOrderUpdated,AdminStatusChanged,ClientLocationChanged,ClientOrderAssigned,ClientStatusChanhed,CourierTaskAssigned,CourierOrderCancelled,CourierOrderUpdated);
+		return Arrays.asList(AdminOrderCreated, AdminLocationChanged ,AdminOrderCancelled,AdminOrderUpdated,AdminStatusChanged,ClientLocationChanged,ClientOrderAssigned,ClientStatusChanged,CourierTaskAssigned,CourierOrderCancelled,CourierOrderUpdated);
 	}
 }

@@ -4,7 +4,7 @@ import static com.stas.parceldelivery.commons.constants.Queues.AdminLocationChan
 import static com.stas.parceldelivery.commons.constants.Queues.AdminStatusChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientLocationChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssigned;
-import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanhed;
+import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.CourierTaskAssigned;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -48,7 +48,7 @@ import com.stas.parceldelivery.commons.constants.Routes;
 @Testcontainers
 @SpringBootTest
 @ComponentScan("com.stas.parceldelivery.client.amqp")
-public class AmqpExchangeITest {
+public class ClientAmqpExchangeITest {
 	
 	
 
@@ -96,13 +96,20 @@ public class AmqpExchangeITest {
 	@PostConstruct
 	public void init() {
 
-		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.ADMIN_EXCHANGE, Routes.OrderAssignment,
+		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.ADMIN_EXCHANGE, 
+				Routes.OrderAssignment,
 				/* tp */
-				ClientOrderAssigned, CourierTaskAssigned);
+				ClientOrderAssigned);
+		
+		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.ADMIN_EXCHANGE, 
+				Routes.CourierTaskAssigned,
+				/* tp */
+				CourierTaskAssigned);
+		
 
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.COURIER_EXCHANGE, Routes.OrderStatusChanged,
 				/* tp */
-				AdminStatusChanged, ClientStatusChanhed);
+				AdminStatusChanged, ClientStatusChanged);
 
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.COURIER_EXCHANGE, Routes.LocationChanged,
 				/* tp */
@@ -144,18 +151,18 @@ public class AmqpExchangeITest {
 	}
 
 	@Test
-	public void testClient_AndCourier_See_OrderAssigned() throws InterruptedException {
+	public void testClient_Sees_OrderAssigned() throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch(2);
 
 		mockOnServiceCall(latch).deliveryAssigned(any(OrderAssignment.class));
-		mockOnDummyCall(latch);
 
 		orderAssigned.convertAndSend(mAssignment);
 
 		latch.await(1, TimeUnit.SECONDS);
 		verifyServiceCalled(1).deliveryAssigned(any(OrderAssignment.class));
-		verifyDummyCalled(1);
 	}
+	
+	
 
 	@Test
 	public void testClient_And_Admin_see_StatusChanged() throws InterruptedException {

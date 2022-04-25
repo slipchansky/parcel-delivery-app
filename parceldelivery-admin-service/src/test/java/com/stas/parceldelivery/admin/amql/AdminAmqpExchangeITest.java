@@ -124,7 +124,7 @@ public class AdminAmqpExchangeITest  {
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.COURIER_EXCHANGE, 
 				Routes.OrderStatusChanged,
 				/* tp */
-				AdminStatusChanged, ClientStatusChanhed);
+				AdminStatusChanged, ClientStatusChanged);
 
 		ExchangeUtil.exchangeWithTopicToQueues(amqp, true, ExchangeName.COURIER_EXCHANGE, Routes.LocationChanged,
 				/* tp */

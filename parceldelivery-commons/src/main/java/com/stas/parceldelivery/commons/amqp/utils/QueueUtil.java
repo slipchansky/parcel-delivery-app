@@ -25,7 +25,9 @@ public class QueueUtil {
 
 	public static void purgeQueues(AmqpAdmin admin, List<String> all) {
 		all.forEach( q -> {
+			try {
 			admin.purgeQueue(q);
+			} catch(Throwable e) {}
 		});
 	}
 	

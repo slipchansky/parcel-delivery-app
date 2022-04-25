@@ -164,16 +164,31 @@ public class DeliveryService {
 
 
 
+	@Transactional
 	public void deliveryAssigned(OrderAssignment payload) {
-		// FIXME!!!
+		Optional<DeliveryOrder> existing = deliveryRepository.findById(payload.getId());
+		if(!existing.isPresent()) {
+			log.debug("Order not found {}", payload.getId());
+		}
+		DeliveryOrder order = existing.get();
+		order.setStatus(DeliveryStatus.ASSIGNED);
 		
+		deliveryRepository.save(order);
 	}
 
 
 
+	@Transactional
 	public void updateLocation(LocationChanged payload) {
-		// TODO Auto-generated method stub
+		Optional<DeliveryOrder> existing = deliveryRepository.findById(payload.getId());
+		if(!existing.isPresent()) {
+			log.debug("Order not found {}", payload.getId());
+		}
 		
+		DeliveryOrder order = existing.get();
+		order.setLocation(payload.getLocation());
+		order.setStatus(DeliveryStatus.INPROGRESS);
+		deliveryRepository.save(order);
 	}
 
 }

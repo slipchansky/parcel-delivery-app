@@ -2,7 +2,7 @@ package com.stas.parceldelivery.client.amqp;
 
 import static com.stas.parceldelivery.commons.constants.Queues.ClientLocationChanged;
 import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssigned;
-import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanhed;
+import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanged;
 
 import java.io.IOException;
 
@@ -34,12 +34,12 @@ public class ClientListener {
 
 	@PostConstruct
 	public void init() {
-		QueueUtil.withQueues(admin, true, ClientStatusChanhed, ClientLocationChanged, ClientOrderAssigned);
+		QueueUtil.withQueues(admin, true, ClientStatusChanged, ClientLocationChanged, ClientOrderAssigned);
 		
 	}
 	
 	
-	@RabbitListener(queues = ClientStatusChanhed)
+	@RabbitListener(queues = ClientStatusChanged)
     public void onStatusChanged(
     		OrderStatusChanged payload, 
     		Channel channel, 
