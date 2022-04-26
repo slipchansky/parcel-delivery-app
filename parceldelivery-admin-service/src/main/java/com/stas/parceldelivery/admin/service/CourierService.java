@@ -51,7 +51,9 @@ public class CourierService {
 	public CourierDTO registerCourier(String userId) {
 		Courier courier = retrieveCourierFromUser(userId);
 		courier.setStatus(CourierStatus.free);
-		return from(repository.save(courier)).to(CourierDTO.class);
+		Courier saved = repository.save(courier);
+		CourierDTO result = from(saved).to(CourierDTO.class);
+		return result;
 		
 	}
 

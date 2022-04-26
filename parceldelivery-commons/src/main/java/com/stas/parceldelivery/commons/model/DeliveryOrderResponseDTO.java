@@ -21,6 +21,7 @@ public class DeliveryOrderResponseDTO {
 	private String addressTo;
 	private String clientPhone;
 	private String clientEmail;
+	private String location;
 	private DeliveryStatus status;
 	Date created;
 	Date modified;

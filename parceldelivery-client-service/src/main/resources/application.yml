@@ -14,23 +14,16 @@ spring:
     port:  5672
     username: guest
     password: guest
+
+logging:
+    pattern:
+       console: "%-5p %c{1}:%L %m requestId=%X{parcel_service_request_id} correlationId=%X{parcel_service_correlation_id}%n"
+    level:
+       com:
+         stas:
+           parceldelivery: DEBUG
+       org:
+           springframework:
+              cloud:
+                 openfeign: DEBUG
     
-    auto-config:
-      enabled: true
-      
-      info-headers:
-        source-application: ${spring.application.name}
-      
-      exchanges:
-        exchange-one:
-          name: exchange-one
-      
-      queues:
-        queue-one:
-          name: queue-one
-      
-      bindings:
-        binding-one:
-          exchange: exchange-one
-          queue: queue-one
-          routing-key: rkey-one

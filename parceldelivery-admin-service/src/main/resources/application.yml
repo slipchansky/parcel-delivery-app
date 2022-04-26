@@ -14,4 +14,15 @@ spring:
     port:  5672
     username: guest
     password: guest
+logging:
+    pattern:
+       console: "%-5p %c{1}:%L %m requestId=%X{parcel_service_request_id} correlationId=%X{parcel_service_correlation_id}%n"
+    level:
+       com:
+         stas:
+           parceldelivery: DEBUG
+       org:
+           springframework:
+              cloud:
+                 openfeign: DEBUG
     

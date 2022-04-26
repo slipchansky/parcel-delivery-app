@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -52,7 +53,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
 
-	@ExceptionHandler(Exception.class)
+	
 	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
 
 		ErrorResponse error = new ErrorResponse();
@@ -62,8 +63,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		errors.add(ex.getLocalizedMessage());
 		error.setMessage(errors);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-
 	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public final ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+				ErrorResponse.builder()
+				.status(HttpStatus.FORBIDDEN)
+				.message("Access denied")
+				.timeStamp(new Date())
+				.build()
+		);
+	} 
+	
+	
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public final ResponseEntity<Object> handleUserNotFound(UsernameNotFoundException ex, WebRequest request) {
 		ErrorResponse error = new ErrorResponse();

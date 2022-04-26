@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.publcapi.config;
+package com.stas.parceldelivery.admin.configuration;
 
 import java.util.UUID;
 

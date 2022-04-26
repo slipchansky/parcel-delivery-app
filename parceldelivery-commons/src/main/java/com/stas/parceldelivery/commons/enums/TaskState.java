@@ -9,6 +9,13 @@ public enum TaskState {
 	NEW, PROGRESS, FINISHED, CANCELLED;
 	
 	private final static Map<DeliveryStatus, TaskState> stateMapping = new HashMap<>();
+	static {
+		stateMapping.put(DeliveryStatus.ASSIGNED, PROGRESS);
+		stateMapping.put(DeliveryStatus.CANCELED, CANCELLED);
+		stateMapping.put(DeliveryStatus.INPROGRESS, PROGRESS);
+		stateMapping.put(DeliveryStatus.FINISHED, FINISHED);
+		stateMapping.put(DeliveryStatus.CREATED, NEW);
+	}
 	
 	public static TaskState fromDeliveryStatus(DeliveryStatus status) {
 		if(!stateMapping.containsKey(status)) {

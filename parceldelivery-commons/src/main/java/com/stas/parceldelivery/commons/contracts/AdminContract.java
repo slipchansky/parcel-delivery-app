@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.stas.parceldelivery.commons.constants.AdminRoutes;
 import com.stas.parceldelivery.commons.model.CourierDTO;
@@ -32,7 +33,7 @@ public interface AdminContract {
 	@GetMapping(AdminRoutes.TASKS_UNASSIGNED)
 	public List<DeliveryTaskDTO> getUnassignedTasks();
 	
-	@GetMapping(AdminRoutes.TASK_ASSIGN)
+	@PutMapping(AdminRoutes.TASK_ASSIGN)
 	public DeliveryTaskDTO assignTask(@PathVariable(AdminRoutes.P_TASK_ID) String taskId, @PathVariable(AdminRoutes.P_COURIER_ID) String courioerId);
 	
 	@GetMapping(AdminRoutes.TASK_GIVEN)

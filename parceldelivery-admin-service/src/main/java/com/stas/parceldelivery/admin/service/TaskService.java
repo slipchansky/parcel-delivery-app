@@ -127,6 +127,7 @@ public class TaskService {
 		}
 		DeliveryTask task = found.get();
 		task.setStatus(DeliveryStatus.ASSIGNED);
+		task.setState(TaskState.PROGRESS);
 		task.setAssignee(oCourier.get());
 		task = tasks.save(task);
 		addTrace(task);

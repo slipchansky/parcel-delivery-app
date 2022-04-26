@@ -3,8 +3,8 @@ from api_framework import BaseApiFramework
 
 api_prefix = "/auth"
 class AuthApi(BaseApiFramework):
-    def __init__(self, base_url, user, password):
-        BaseApiFramework.__init__(self, base_url, api_prefix, user, password)
+    def __init__(self, base_url, username, password):
+        BaseApiFramework.__init__(self, base_url, api_prefix, username, password)
 
     def sign_up(self, username, password, email, roles=None):
         if roles is None:
@@ -16,9 +16,18 @@ class AuthApi(BaseApiFramework):
                                       "roles": roles
                                     })
 
+    def with_user(self, username, password, email=None, roles=["ROLE_CLIENT", "ROLE_ADMIN", "ROLE_COURIER"]):
+        if self.is_authenticated():
+            if email is None:
+                email = username+'@'+username+'.com'
+            r, body = self.sign_up(username=username, password=password, email=email, roles=roles)
+            if r.status_code == 500:
+                if type(body['message']) is list:
+                    if body['message'][0] == 'User already exists':
+                        return True
 
-a = AuthApi("http://localhost:8080", 'super', 'password')
-if a.is_authenticated():
-    r, body = a.sign_up(username='test1', password='sql', email='testuser1@test.com', roles=["ROLE_CLIENT", "ROLE_ADMIN", "ROLE_COURIER"])
-    k = 0
-m = 1
+            elif r.status_code == 200:
+                return True
+        return False
+
+

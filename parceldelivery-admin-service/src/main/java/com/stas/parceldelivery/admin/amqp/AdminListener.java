@@ -19,6 +19,7 @@ import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 import com.rabbitmq.client.Channel;
 import com.stas.parceldelivery.admin.service.AdminService;
@@ -30,53 +31,69 @@ import com.stas.parceldelivery.commons.amqp.messages.OrderStatusChanged;
 import com.stas.parceldelivery.commons.amqp.messages.OrderUpdated;
 import com.stas.parceldelivery.commons.amqp.utils.QueueUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class AdminListener {
-	
+
 	@Autowired
 	AdminService service;
-	
+
 	@Autowired
 	AmqpAdmin admin;
-	
 
 	@PostConstruct
 	public void init() {
-		QueueUtil.withQueues(admin, true, 
-				AdminOrderCreated,
-				AdminOrderCancelled, 
-				AdminOrderUpdated, 
-				AdminLocationChanged, 
-				AdminStatusChanged);
-		
+		QueueUtil.withQueues(admin, true, AdminOrderCreated, AdminOrderCancelled, AdminOrderUpdated,
+				AdminLocationChanged, AdminStatusChanged);
+
 	}
-	
-	
+
 	@RabbitListener(queues = AdminOrderCreated)
-    public void adminOnCreated(OrderCreated payload) throws IOException {
+	public void adminOnCreated(OrderCreated payload) throws IOException {
+		try {
 		service.createOrder(payload);
-    }
-	
+		} catch (UnexpectedRollbackException  e) {
+			log.debug("Error creating order {}", payload);
+		}
+	}
+
 	@RabbitListener(queues = AdminOrderUpdated)
-    public void adminOnUpdated(OrderUpdated payload) throws IOException {
-		service.updateOrder(payload);
-    }
-	
-	
+	public void adminOnUpdated(OrderUpdated payload) throws IOException {
+		try {
+			service.updateOrder(payload);
+		} catch (UnexpectedRollbackException  e) {
+			log.debug("Error updating order {}", payload.getId());
+		}
+	}
+
 	@RabbitListener(queues = AdminOrderCancelled)
-    public void onadminOnCancelles(OrderCancelled payload) throws IOException {
-		service.cancelOrder(payload);
-    }
-	
+	public void onadminOnCancelles(OrderCancelled payload) throws IOException {
+		try {
+			service.cancelOrder(payload);
+		} catch (UnexpectedRollbackException  e) {
+			log.debug("Error updating order {}", payload.getId());
+		}
+	}
+
 	@RabbitListener(queues = AdminStatusChanged)
-    public void onAdminStatusChanged(OrderStatusChanged payload) throws IOException {
-		service.changeStatus(payload);
-    }
-	
+	public void onAdminStatusChanged(OrderStatusChanged payload) throws IOException {
+		try {
+			service.changeStatus(payload);
+		} catch (UnexpectedRollbackException  e) {
+			log.debug("Error updating order {}", payload.getId());
+		}
+	}
+
 	@RabbitListener(queues = AdminLocationChanged)
-    public void onAdminLocationChanged(LocationChanged payload) throws IOException {
-		service.updateLocation(payload);
-    }
-	
-	
+	public void onAdminLocationChanged(LocationChanged payload) throws IOException {
+		try {
+			service.updateLocation(payload);
+		} catch (UnexpectedRollbackException e) {
+			log.debug("Error updating order {}", payload.getId());
+		}
+
+	}
+
 }

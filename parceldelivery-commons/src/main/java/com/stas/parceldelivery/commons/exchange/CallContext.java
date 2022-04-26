@@ -22,8 +22,10 @@ public class CallContext {
 	
 	private static synchronized CallContext createContext() {
 		CallContext context = CONTEXT_HOLDER.get();
-		if(context == null)
+		if(context == null) {
 			context = new CallContext();
+		}
+		CONTEXT_HOLDER.set(context);
 		return context;
 	}
 

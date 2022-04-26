@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -38,13 +40,22 @@ public class BeanConverter {
 		public <R> R to(Class<R> clazz) {
 			return BeanConverter.convert(bean, clazz);
 		}
-		
+
+		// peforms partial update from given bean to target bean. 
+		// Only not null fields are being transferred
 		public <T> R with(T x) {
 			if(bean != null && x!=null) {
-			 Map dst = new BeanMap(bean);
+			 BeanMap dst = new BeanMap(bean);
 			 Object o = BeanConverter.convert(x, bean.getClass());
-			 Map src = BeanConverter.convert(o, Map.class);
-			 dst.putAll(src);
+			 BeanMap src = new BeanMap(o);
+			 Set<Entry<Object, Object>> entries = src.entrySet();
+			 
+			 // stas. improve this
+			 entries.forEach(e -> {
+				 if(!"class".equals(e.getKey()) && e.getValue() != null)
+					 dst.put(e.getKey(), e.getValue());
+			 });
+			 
 			}
 			return (R)bean;
 		}

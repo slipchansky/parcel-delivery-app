@@ -12,7 +12,6 @@ import lombok.*;
 @Builder
 public class CourierDTO {
 	private String id;
-	private String username;
 	private String firstName;
 	private String lastName;
 	private String city;

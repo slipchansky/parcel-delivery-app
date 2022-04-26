@@ -65,7 +65,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		prepareContext(request, response);
+		
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
@@ -76,6 +76,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			}
 		} catch (Exception e) {
 			log.error("Error in process of authentication", e);
+			log.trace("error trace", e);
 		}
 		filterChain.doFilter(request, response);
 	}
@@ -89,23 +90,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 		return null;
 	}
 	
-	private void prepareContext(HttpServletRequest request, HttpServletResponse response) {
-		
-		CallContext context = CallContext.getInstance();
-		
-		String correlationId = request.getHeader(ParceldeliveryHeaders.CORRELATION_ID);
-		String requestId = request.getHeader(ParceldeliveryHeaders.REQUEST_ID);
-		
-		
-		if(!StringUtils.hasText(correlationId)) correlationId = UUID.randomUUID().toString();
-		if(!StringUtils.hasText(requestId)) requestId = correlationId;
-		
-		context.setCorrelationId(correlationId);
-		context.setRequestId(requestId);
-		
-		response.addHeader(ParceldeliveryHeaders.REQUEST_ID, requestId);
-		response.addHeader(ParceldeliveryHeaders.CORRELATION_ID, correlationId);
-	}
 
 	private void updateContext() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();

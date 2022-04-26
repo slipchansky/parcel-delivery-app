@@ -62,7 +62,7 @@ public class ResourceAdmin extends BaseController {
 		return call(c -> adminService.assignTask(taskId, courioerId));
 	}
 
-	@PutMapping(AdminRoutes.TASK_GIVEN)
+	@GetMapping(AdminRoutes.TASK_GIVEN)
 	public DeliveryTaskDetailsDTO getTaskDetails(@PathVariable(AdminRoutes.P_TASK_ID) String taskId) {
 		return call(c -> adminService.getTaskDetails(taskId));
 	}

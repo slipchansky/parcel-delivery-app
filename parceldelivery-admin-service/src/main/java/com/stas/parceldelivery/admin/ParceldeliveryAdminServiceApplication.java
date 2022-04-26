@@ -6,10 +6,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-public class ParceldeliveryClientServiceApplication {
+public class ParceldeliveryAdminServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ParceldeliveryClientServiceApplication.class, args);
+		SpringApplication.run(ParceldeliveryAdminServiceApplication.class, args);
 	}
 
 }

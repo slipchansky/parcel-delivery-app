@@ -24,7 +24,7 @@ import com.stas.parceldelivery.publcapi.constants.GrantedTo;
 import com.stas.parceldelivery.publcapi.service.ClientServiceClient;
 
 @RestController
-@RequestMapping(PublicApiRoutes.CLIENT)
+@RequestMapping(PublicApiRoutes.ROOT+PublicApiRoutes.CLIENT)
 @PreAuthorize(GrantedTo.CLIENT)
 public class ResourceClient extends BaseController {
 	
