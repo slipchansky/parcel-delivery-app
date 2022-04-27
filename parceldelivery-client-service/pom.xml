@@ -14,10 +14,17 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Parcel Delivery Client Service</name>
 	<description>Parcel Delivery Client Service</description>
+	
 	<properties>
 		<java.version>1.8</java.version>
+		<spring-cloud.version>2021.0.1</spring-cloud.version>
 	</properties>
+	
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.stas.parceldelivery</groupId>
@@ -57,7 +64,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<!-- <scope>test</scope> -->
 		</dependency>
 
 		<dependency>
@@ -82,6 +88,19 @@
 
 
 	</dependencies>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 
 	<build>
 		<plugins>

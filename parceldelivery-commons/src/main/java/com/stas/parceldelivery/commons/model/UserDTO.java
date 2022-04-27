@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.stas.parceldelivery.commons.enums.Role;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +16,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "Common User Information")
 public class UserDTO extends UserResponseDTO {
 	public static final Set<Role> JUST_USER = new HashSet<>();
+	
+	@ApiModelProperty(value = "User's Password for Rigisterin User")
 	private String password;
 	static {
 		JUST_USER.add(Role.ROLE_CLIENT);

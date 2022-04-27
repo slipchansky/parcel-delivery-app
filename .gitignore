@@ -12,6 +12,7 @@ acceptance-tests/__pycache__/
 acceptance-tests/api_framework/__pycache__/
 *.pyc
 
+local_postgres_data/
 .project
 .classpath
 .settings/

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +20,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder(builderClassName = "__ERB")
 @Data
+@ApiModel(value = "Common Error Response")
 public class ErrorResponse {
+	@ApiModelProperty(value = "Http Status")
 	private int status;
+	@ApiModelProperty(value = "Error Message")
 	private List<String> message;
+	
+	@ApiModelProperty(value = "When the Error occured")
 	private Date timeStamp = new Date();
 	
 	public static ErrorResponseBuilder builder() {

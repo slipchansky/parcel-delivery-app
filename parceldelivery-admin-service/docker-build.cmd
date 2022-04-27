@@ -1,0 +1,1 @@
+docker build -t parceldelivery-admin-service:latest .

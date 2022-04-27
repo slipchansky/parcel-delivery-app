@@ -25,6 +25,8 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import com.stas.parceldelivery.admin.amqp.AdminListener;
 import com.stas.parceldelivery.admin.amqp.AdminMessageTransmitter;
@@ -57,6 +59,9 @@ public class AdminAmqpExchangeITest  {
 	}
 
 	
+	@Container
+	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
+	.withExposedPorts(5672, 15672);
 	
 
 	@Autowired 

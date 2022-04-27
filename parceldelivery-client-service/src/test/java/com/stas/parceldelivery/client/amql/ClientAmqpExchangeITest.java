@@ -22,8 +22,14 @@ import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.netflix.eureka.config.EurekaClientConfigServerAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -46,15 +52,25 @@ import com.stas.parceldelivery.commons.constants.Queues;
 import com.stas.parceldelivery.commons.constants.Routes;
 
 @Testcontainers
-@SpringBootTest
+@SpringBootTest(classes = {ClientAmqpExchangeITest.ClientAmqpTestApp.class, ClientListener.class, TestListener.class, ClientMessageTransmitter.class})
 @ComponentScan("com.stas.parceldelivery.client.amqp")
 public class ClientAmqpExchangeITest {
+
+	@SpringBootApplication(exclude = {
+		    DataSourceAutoConfiguration.class,
+		    EurekaClientConfigServerAutoConfiguration.class,
+		    DataSourceTransactionManagerAutoConfiguration.class, 
+		    HibernateJpaAutoConfiguration.class,
+		    WebClientAutoConfiguration.class
+		})
+	public static class ClientAmqpTestApp {
+	}
 	
 	
 
-//	@Container
-//	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
-//	.withExposedPorts(5672, 15672);
+	@Container
+	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
+	.withExposedPorts(5672, 15672);
 
 	@Autowired
 	ConnectionFactory connectionFactory;

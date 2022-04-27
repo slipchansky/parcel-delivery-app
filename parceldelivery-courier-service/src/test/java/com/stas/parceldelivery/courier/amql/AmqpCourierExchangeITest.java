@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.stas.parceldelivery.commons.amqp.messages.CourierAssignedTask;
@@ -44,9 +46,9 @@ public class AmqpCourierExchangeITest {
 	
 	
 
-//	@Container
-//	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
-//	.withExposedPorts(5672, 15672);
+	@Container
+	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
+	.withExposedPorts(5672, 15672);
 
 	@Autowired
 	ConnectionFactory connectionFactory;

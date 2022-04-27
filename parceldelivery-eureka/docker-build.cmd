@@ -1,0 +1,1 @@
+docker build -t parceldelivery-discovery-service:latest .

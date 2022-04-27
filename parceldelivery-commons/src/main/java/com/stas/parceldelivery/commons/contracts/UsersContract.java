@@ -1,8 +1,5 @@
 package com.stas.parceldelivery.commons.contracts;
 
-import static com.stas.parceldelivery.commons.constants.UserRoutes.BYROLE;
-import static com.stas.parceldelivery.commons.constants.UserRoutes.P_ROLE;
-import static com.stas.parceldelivery.commons.constants.UserRoutes.P_USER_ID;
 import static com.stas.parceldelivery.commons.constants.UserRoutes.*;
 
 import java.util.List;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.stas.parceldelivery.commons.enums.Role;
 import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
 
 public interface UsersContract {
@@ -33,5 +31,12 @@ public interface UsersContract {
 
 	@PostMapping(USERS)
 	public UserResponseDTO save(@RequestBody UserDTO user);
+	
+	@PostMapping(USER_DETAILS)
+	public UserDetailsDTO update(@PathVariable(P_USER_ID) String userId, @RequestBody UserDetailsDTO d);
+
+	@GetMapping(USER_DETAILS)
+	public UserDetailsDTO getDetails(@PathVariable(P_USER_ID) String userId);
+	
 
 }

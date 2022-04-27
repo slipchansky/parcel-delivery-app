@@ -1,0 +1,1 @@
+docker build -t parceldelivery-courier-service:latest .

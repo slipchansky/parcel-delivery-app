@@ -16,6 +16,7 @@
 	 <module>parceldelivery-client-service</module>
 	 <module>parceldelivery-courier-service</module>
 	 <module>parceldelivery-admin-service</module>
+	 <module>parceldelivery-eureka</module>
 	 <module>parcel-delivery-publicapi</module>
 	</modules>
 

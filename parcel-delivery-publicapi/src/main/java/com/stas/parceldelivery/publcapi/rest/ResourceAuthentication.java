@@ -24,6 +24,10 @@ import com.stas.parceldelivery.publcapi.dto.LoginRequest;
 import com.stas.parceldelivery.publcapi.service.UserService;
 import com.stas.parceldelivery.publcapi.service.auth.UserSecurityDetailsImpl;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(value = "Authentication API")
 @RestController
 @RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -41,6 +45,9 @@ public class ResourceAuthentication extends BaseController {
 	@Autowired
 	JwtUtils jwtUtils;
 
+	@ApiOperation(value = "User Login API",
+            nickname = "Login",
+            tags = "")
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> authUser(@RequestBody LoginRequest loginRequest) {
 		return call(c -> {
@@ -61,6 +68,9 @@ public class ResourceAuthentication extends BaseController {
 	}
 
 
+	@ApiOperation(value = "User Signup API",
+            nickname = "Signup",
+            tags = "")
 	@PostMapping("/signup")
 	public UserResponseDTO registerClient(@RequestBody UserDTO signupRequest) {
 		return call(c -> userService.createClient(signupRequest));

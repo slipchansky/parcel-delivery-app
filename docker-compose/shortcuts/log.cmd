@@ -1,0 +1,1 @@
+docker-compose logs %1 > logs\%1.log

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.stas.parceldelivery.commons.contracts.UsersContract;
 import com.stas.parceldelivery.commons.enums.Role;
 import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
+import com.stas.parceldelivery.user.service.UserDetailsService;
 import com.stas.parceldelivery.user.service.UserService;
 
 @RestController
@@ -21,6 +23,22 @@ public class UsersController implements UsersContract {
 
 	@Autowired
 	UserService uservice;
+	
+	@Autowired
+	UserDetailsService service;
+	
+	
+
+	@Override
+	public UserDetailsDTO update(String userId, UserDetailsDTO d) {
+		return service.save(userId, d);
+	}
+	
+	@Override
+	public UserDetailsDTO getDetails(String userId) {
+		return service.get(userId);
+	}
+	
 	
 	@Override
 	public List<UserResponseDTO> list(Role role) {
@@ -42,5 +60,7 @@ public class UsersController implements UsersContract {
 	public UserResponseDTO save(UserDTO user) {
 		return uservice.save(user);
 	}
+	
+	
 	
 }

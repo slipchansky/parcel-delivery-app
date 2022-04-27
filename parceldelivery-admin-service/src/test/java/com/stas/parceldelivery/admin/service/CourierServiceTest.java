@@ -30,17 +30,15 @@ public class CourierServiceTest {
 	@Autowired
 	CourierService service;
 	
-	@MockBean
-	UserDetailsServiceClient userService;
 	
 	@MockBean
-	UserServiceClient userDetailsService;
+	UserServiceClient userService;
 	
 	@MockBean
 	CourierRepository repository;
 	
 	private final static String uaddress = "home";
-	private final static String firstName = "\"stas\"";
+	private final static String firstName = "stas";
 	private final static String lastName = "lipchansky";
 	private final static String phone = "12345";
 	private final static String city = "Donetsk";
@@ -76,7 +74,7 @@ public class CourierServiceTest {
 	@Test
 	public void retrieveCourierFromUserTest() {
 		when(userService.getDetails(anyString())).thenReturn(userDetails);
-		when(userDetailsService.get(anyString())).thenReturn(user);
+		when(userService.get(anyString())).thenReturn(user);
 		
 		Courier c = service.retrieveCourierFromUser(userId);
 		assertEquals(userId, c.getId());
@@ -91,7 +89,7 @@ public class CourierServiceTest {
 	@Test
 	public void registerCourierTest() {
 		when(userService.getDetails(anyString())).thenReturn(userDetails);
-		when(userDetailsService.get(anyString())).thenReturn(user);
+		when(userService.get(anyString())).thenReturn(user);
 		when(repository.save(any(Courier.class))).then(returnsFirstArg());
 		
 		Courier c = service.retrieveCourierFromUser(userId);
