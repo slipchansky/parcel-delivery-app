@@ -1,9 +1,9 @@
 from uuid import uuid4 as randomuuid
-from admin_api import AdminApi
-from courier_api import CourierApi
-from client_api import ClientApi
-from auth_api import  AuthApi
-from env import base_url
+from api_framework.admin_api import AdminApi
+from api_framework.courier_api import CourierApi
+from api_framework.client_api import ClientApi
+from api_framework.auth_api import  AuthApi
+from api_framework.env import base_url
 
 base_url = base_url()
 

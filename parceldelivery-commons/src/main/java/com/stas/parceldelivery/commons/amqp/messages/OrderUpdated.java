@@ -15,4 +15,11 @@ public class OrderUpdated  extends OrderModification {
 	private String addressTo;
 	private String clientPhone;
 	private String clientEmail;
+	
+	public OrderUpdated(String id) {
+		super();
+		this.id = id;
+	}
+	
+	
 }

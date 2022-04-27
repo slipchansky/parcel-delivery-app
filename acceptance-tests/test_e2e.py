@@ -1,5 +1,4 @@
-import pytest
-from all_apis import all_apis
+from api_framework.all_apis import all_apis
 
 
 

@@ -11,4 +11,10 @@ import lombok.*;
 public class LocationChanged  extends OrderModification {
 	private String id;
 	private String location;
+	
+	public LocationChanged(String id) {
+		super();
+		this.id = id;
+	}
+	
 }

@@ -16,4 +16,11 @@ public class CourierAssignedTask implements Serializable {
 	private String addressTo;
 	private String clientPhone;
 	private String clientEmail;
+	
+	
+	public CourierAssignedTask(String id) {
+		super();
+		this.id = id;
+	}
+	
 }

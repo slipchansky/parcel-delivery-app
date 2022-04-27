@@ -1,15 +1,15 @@
-from all_apis import all_apis
+from api_framework.all_apis import all_apis
 import requests
-from env import base_url
+from api_framework.env import base_url
 
 base_url = base_url()
 
 def test_unauthorized():
-    response, body = requests.get(base_url+'/ap/v1/admin/couriers')
+    response = requests.get(base_url+'/ap/v1/admin/couriers')
     assert response.status_code == 401
-    response, body = requests.get(base_url+'/ap/v1/client/deliveries')
+    response = requests.get(base_url+'/ap/v1/client/deliveries')
     assert response.status_code == 401
-    response, body = requests.get(base_url+'/ap/v1/courier/tasks')
+    response = requests.get(base_url+'/ap/v1/courier/tasks')
     assert response.status_code == 401
 
 

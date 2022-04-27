@@ -16,4 +16,8 @@ import lombok.NoArgsConstructor;
 public class OrderStatusChanged extends OrderModification {
 	private String id;
 	private DeliveryStatus status;
+	public OrderStatusChanged(String id) {
+		super();
+		this.id = id;
+	}
 }

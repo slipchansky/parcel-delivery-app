@@ -40,7 +40,7 @@ import com.stas.parceldelivery.courier.service.CourierService;
 @Testcontainers
 @SpringBootTest
 @ComponentScan("com.stas.parceldelivery.client.amqp")
-public class AmqpExchangeITest {
+public class AmqpCourierExchangeITest {
 	
 	
 
@@ -79,11 +79,11 @@ public class AmqpExchangeITest {
 	private RabbitTemplate orderCancelled;
 
 	
-	private final static CourierAssignedTask mAssignment = new CourierAssignedTask();
-	private final static OrderUpdated mOrderUpdated = new OrderUpdated();
-	private final static OrderCancelled mOrderCancelled = new OrderCancelled();
-	private final static OrderStatusChanged mOrderStatusChanged = new OrderStatusChanged();
-	private final static LocationChanged mLocationChanged = new LocationChanged();
+	private final static CourierAssignedTask mAssignment = new CourierAssignedTask("o");
+	private final static OrderUpdated mOrderUpdated = new OrderUpdated("o");
+	private final static OrderCancelled mOrderCancelled = new OrderCancelled("o");
+	private final static OrderStatusChanged mOrderStatusChanged = new OrderStatusChanged("o");
+	private final static LocationChanged mLocationChanged = new LocationChanged("o");
 	
 
 
@@ -178,7 +178,7 @@ public class AmqpExchangeITest {
 		orderCancelled.convertAndSend(mOrderCancelled);
 
 		latch.await(1, TimeUnit.SECONDS);
-		verifyServiceCalled(1).updateCourierTask(any(OrderUpdated.class));
+		verifyServiceCalled(1).cancelCourierTask(any(OrderCancelled.class));
 	}
 
 	@Test

@@ -7,13 +7,16 @@ package-lock.json
 
 # java project build results
 target/
-
-
+__pycache__/
+acceptance-tests/__pycache__/
+acceptance-tests/api_framework/__pycache__/
+*.pyc
 
 .project
 .classpath
 .settings/
 .settings/**
+
 prototypes/solr/.metadata/**
 scripts+configurations/**/lib/**
 scripts+configurations/**/backup/**

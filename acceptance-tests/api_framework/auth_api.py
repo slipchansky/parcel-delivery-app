@@ -1,4 +1,4 @@
-from api_framework import BaseApiFramework
+from api_framework.api_framework import BaseApiFramework
 
 
 api_prefix = "/auth"

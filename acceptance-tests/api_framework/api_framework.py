@@ -1,4 +1,4 @@
-from auth_framework import AuthAPIFramework
+from api_framework.auth_framework import AuthAPIFramework
 import requests
 import json
 
