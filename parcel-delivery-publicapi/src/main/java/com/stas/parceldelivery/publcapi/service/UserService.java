@@ -21,6 +21,8 @@ import com.stas.parceldelivery.commons.model.UserResponseDTO;
 import com.stas.parceldelivery.publcapi.dto.ResponseBase;
 import com.stas.parceldelivery.publcapi.exceptions.InternalServerErrorRuntimeException;
 import com.stas.parceldelivery.publcapi.exceptions.UserAlreadyExistsException;
+import com.stas.parceldelivery.publcapi.service.auth.UserExistsService;
+
 import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
 @Service
@@ -30,12 +32,16 @@ public class UserService {
 	UserServiceClient userServiceClient;
 	
 	@Autowired
+	UserExistsService userExistsService;
+	
+	
+	@Autowired
 	PasswordEncoder passwordEncoder;
 	
 	private UserResponseDTO createUser(UserDTO userdto) throws UserAlreadyExistsException {
 		// TODO. introduce bean validation
 		
-		if(userServiceClient.userExists( userdto.getUsername(), userdto.getEmail()))
+		if(userExistsService.userExists( userdto.getUsername(), userdto.getEmail()))
 			throw new UserAlreadyExistsException ("User already exists");
 			
 		

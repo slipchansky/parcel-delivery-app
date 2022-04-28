@@ -7,12 +7,8 @@ import com.stas.parceldelivery.commons.constants.UserRoutes;
 import com.stas.parceldelivery.commons.contracts.UsersContract;
 
 
-@FeignClient(name="user-service", path= UserRoutes.ROOT, decode404 = true)
+@FeignClient(name="user-service", path= UserRoutes.ROOT)
 public interface UserServiceClient extends UsersContract {
-	
-	default public boolean userExists(String userName, String email) {
-			return headOfUserExists(userName, email).getStatusCode()==HttpStatus.NO_CONTENT;
-	}
 	
 	
 }

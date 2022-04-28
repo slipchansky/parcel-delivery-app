@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.stas.parceldelivery.commons.constants.ParceldeliveryHeaders;
+import com.stas.parceldelivery.commons.contracts.FeignErrorHandler;
 import com.stas.parceldelivery.commons.exchange.CallContext;
 
 import feign.RequestInterceptor;
@@ -26,5 +27,10 @@ public class FeignConfig {
 	public FeignRequestInterceptor addRequestIdHeaderInterceptor() {
 		return new FeignRequestInterceptor();
 	}
+	
+	@Bean
+    public FeignErrorHandler feignDecoder() {
+        return new FeignErrorHandler();
+    }
 	
 }

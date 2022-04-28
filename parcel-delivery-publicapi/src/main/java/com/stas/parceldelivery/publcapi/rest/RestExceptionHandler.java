@@ -18,8 +18,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.stas.parceldelivery.commons.exceptions.AlreadyExistsException;
 import com.stas.parceldelivery.commons.exceptions.BadRequestException;
+import com.stas.parceldelivery.commons.exceptions.ErrorFromUnderlyingService;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
 import com.stas.parceldelivery.commons.model.ErrorResponse;
+import com.stas.parceldelivery.publcapi.exceptions.SilentExceptionWrapper;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -52,8 +54,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		ErrorResponse response = ErrorResponse.builder().messages(ex.getMessage()).status(HttpStatus.CONFLICT).build();
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
+	
+	@ExceptionHandler(ErrorFromUnderlyingService.class)
+	public final ResponseEntity<Object> handleUnderlyingServiceError(ErrorFromUnderlyingService ex, WebRequest request) {
+		return ResponseEntity.status(ex.getResponse().getStatus()).body(ex.getResponse());
+	}
+	
+	
+	@ExceptionHandler(SilentExceptionWrapper.class)
+	public final ResponseEntity<Object> handleSilentError(SilentExceptionWrapper ex, WebRequest request) {
+		return handleAllExceptions((Exception)ex.getCause(), request);
+	}
 
 	
+	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
 
 		ErrorResponse error = new ErrorResponse();
@@ -86,8 +100,5 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
 
 	}
-	
-	
-	
 
 }

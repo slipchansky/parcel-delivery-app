@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.stas.parceldelivery.commons.exceptions.AlreadyExistsException;
 import com.stas.parceldelivery.commons.exceptions.BadRequestException;
+import com.stas.parceldelivery.commons.exceptions.ErrorFromUnderlyingService;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
 import com.stas.parceldelivery.commons.model.ErrorResponse;
 
@@ -46,8 +47,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     			.status(HttpStatus.NOT_FOUND)
     			.build();
     	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    	
     }
+    
+	@ExceptionHandler(ErrorFromUnderlyingService.class)
+	public final ResponseEntity<Object> handleUnderlyingServiceError(ErrorFromUnderlyingService ex, WebRequest request) {
+		return ResponseEntity.status(ex.getResponse().getStatus()).body(ex.getResponse());
+	}
+    
     
     @ExceptionHandler(BadRequestException.class)
     public final ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {

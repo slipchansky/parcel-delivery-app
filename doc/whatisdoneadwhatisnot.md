@@ -21,8 +21,6 @@ Among them:
 
 - I didn't implement bin validation at all. That may be done fairly straightforwardly, but it requires careful attention to each field to be validated and as a consequence that is time consuming task as for the test. 
 
-- I use FeignClient to access Services. In this project, I don't handle errors that occur when service communicating via FejgnClient. In a real project, it is necessary to implement additional error handling  with reformulation of these errors into terms of the appropriate application level.
-
 - I have introduced mechanisms for tracking call-flow by requestId and correlationId headers, but I have not provided an end-to-end correlationId transition within the inter-service exchange via AMQP.
 
 - I have not worked out in detail the error handling resulting in the processing of incoming messages from AMQP. 
