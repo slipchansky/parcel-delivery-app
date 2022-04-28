@@ -31,7 +31,7 @@ services:
     volumes:
       - ./local_postgres_data/commondb:/var/lib/postgresql/data
     ports:
-      - 5444:5432
+      - 5432
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
       interval: 10s
@@ -128,7 +128,7 @@ services:
     environment:
       port: 3333
     ports:
-      - 5555:3333
+      - 3333
 
   ############################################################################
   # services
