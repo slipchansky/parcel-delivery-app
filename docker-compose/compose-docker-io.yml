@@ -1,0 +1,246 @@
+﻿version: '3.9'
+
+volumes:
+  local_postgres_data: {}
+
+services:
+  # rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - "5672"
+      - "15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  ##############################################################################
+  # database servers
+  # common database for all the stuff
+  database:
+    image: postgres:11.6
+    container_name: database
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_PORT: 5432
+    volumes:
+      - ./local_postgres_data/commondb:/var/lib/postgresql/data
+    ports:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  
+#  users_pg:
+#    image: postgres:11.6
+#    container_name: users_pg
+#    environment:
+#      POSTGRES_DB: users
+#      POSTGRES_USER: users
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_PORT: 5432
+#    volumes:
+#      - ./local_postgres_data/users:/var/lib/postgresql/data
+#    ports:
+#      - 5444:5432
+#    healthcheck:
+#      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 20
+#
+#  # admin db
+#  admin_pg:
+#    image: postgres:11.6
+#    container_name: admin_pg
+#    environment:
+#      POSTGRES_DB: admindb
+#      POSTGRES_USER: admin_user
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_PORT: 5432
+#    volumes:
+#      - ./local_postgres_data/admin:/var/lib/postgresql/data
+#    ports:
+#      - 5432
+#    healthcheck:
+#      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 20
+#
+#  # clients db
+#  client_pg:
+#    image: postgres:11.6
+#    container_name: clients_pg
+#    environment:
+#      POSTGRES_DB: clients
+#      POSTGRES_USER: client
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_PORT: 5432
+#    volumes:
+#      - ./local_postgres_data/clients:/var/lib/postgresql/data
+#    ports:
+#      - 5432
+#    healthcheck:
+#      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 20
+#
+#  # couriers db
+#  courier_pg:
+#    image: postgres:11.6
+#    container_name: couriers_pg
+#    environment:
+#      POSTGRES_DB: couriers
+#      POSTGRES_USER: courier
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_PORT: 5432
+#    volumes:
+#      - ./local_postgres_data/couriers:/var/lib/postgresql/data
+#    ports:
+#      - 5432
+#    healthcheck:
+#      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 20
+#
+#
+  ############################################################################
+  # discovery service
+  eureka-server:
+    image: slipchansky/parceldelivery-discovery-service:latest
+    container_name: eureka-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://eureka-server:3333"]
+      interval: 30s
+      timeout: 5s
+      retries: 20
+
+    environment:
+      port: 3333
+    ports:
+      - 3333
+
+  ############################################################################
+  # services
+
+  user-service:
+    image: slipchansky/parceldelivery-user-service:latest
+    container_name: user-service
+    links:
+      - eureka-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 20
+    depends_on:
+       database:
+          condition: service_healthy
+       eureka-server:
+          condition: service_healthy
+       rabbitmq:
+          condition: service_healthy
+    environment:
+      amqp_host: rabbitmq
+      amqp_port: 5672
+      discovery_endpoint: 'http://eureka-server:3333/eureka'
+      dbhost: database
+      dbport: 5432
+      dbname: database
+      dbuser: dbuser
+      dbpassword: password
+    ports:
+      - 8000
+
+  admin-service:
+    image: slipchansky/parceldelivery-admin-service:latest
+    container_name: admin-service
+    links:
+      - eureka-server
+    depends_on:
+       database:
+          condition: service_healthy
+       eureka-server:
+          condition: service_healthy
+       rabbitmq:
+          condition: service_healthy
+    environment:
+      amqp_host: rabbitmq
+      amqp_port: 5672
+      discovery_endpoint: 'http://eureka-server:3333/eureka'
+      dbhost: database
+      dbport: 5432
+      dbname: database
+      dbuser: dbuser
+      dbpassword: password
+    ports:
+      - 8002
+
+  client-service:
+    image: slipchansky/parceldelivery-client-service:latest
+    container_name: client-service
+    links:
+      - eureka-server
+    depends_on:
+       database:
+          condition: service_healthy
+       eureka-server:
+          condition: service_healthy
+       rabbitmq:
+          condition: service_healthy
+    environment:
+      amqp_host: rabbitmq
+      amqp_port: 5672
+      discovery_endpoint: 'http://eureka-server:3333/eureka'
+      dbhost: database
+      dbport: 5432
+      dbname: database
+      dbuser: dbuser
+      dbpassword: password
+    ports:
+      - 8001
+
+  courier-service:
+    image: slipchansky/parceldelivery-courier-service:latest
+    container_name: courier-service
+    links:
+      - eureka-server
+    depends_on:
+       database:
+          condition: service_healthy
+       eureka-server:
+          condition: service_healthy
+       rabbitmq:
+          condition: service_healthy
+    environment:
+      amqp_host: rabbitmq
+      amqp_port: 5672
+      discovery_endpoint: 'http://eureka-server:3333/eureka'
+      dbhost: database
+      dbport: 5432
+      dbname: database
+      dbuser: dbuser
+      dbpassword: password
+    ports:
+      - 8003
+
+  public-api:
+    image: slipchansky/parceldelivery-publicapi:latest
+    container_name: public-api
+    links:
+      - eureka-server
+    environment:
+      discovery_endpoint: 'http://eureka-server:3333/eureka'
+    ports:
+      - 8080:8080
+

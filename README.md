@@ -1,16 +1,36 @@
 # Parcel Delivery Service
 
 ### Disclaimer
-The proposed solution in this form is not a commercial product. This example is rather just a POC that should be elaborated in details. What is done and what is described here: [Whad is Done and What is Don't] [whatisdoneandwhatisdont]
+The proposed solution in this form is not a commercial product. This example is rather just a POC that should be elaborated in details. What is done and what is not is described here: [What is Done and What is Not] [whatisdoneandwhatisdont]
 
-
-## Starting From Scratch
-
-Get actual project content
+## Get the actual copy of project
 
 ```bash
 https://github.com/slipchansky/parcel-delivery-app.git
 ```
+
+
+## Starting From DockerHub
+
+On Windows
+
+```bash
+cd docker-compose
+up-docker-io.cmd
+```
+
+On Linux
+
+```bash
+cd docker-compose
+chmod 777 up-docker-io.cmd
+./up-docker-io.cmd
+
+```
+
+
+## Starting From Scratch
+
 
 Build and perform unit tests
 
