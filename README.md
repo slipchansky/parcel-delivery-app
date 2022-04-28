@@ -16,6 +16,7 @@ On Windows
 
 ```bash
 cd docker-compose
+mkdir local_postgres_data
 up-docker-io.cmd
 ```
 
@@ -23,10 +24,21 @@ On Linux
 
 ```bash
 cd docker-compose
+mkdir local_postgres_data
 chmod 777 up-docker-io.cmd
 ./up-docker-io.cmd
 
 ```
+
+This composition runs all the service with single shared db server and single database (for saving the resources of host computer)
+
+You also can find there 
+
+```bash
+up-db-per-service-compose-docker-io.cmd
+```
+
+That runs all the services with separate db server.
 
 
 ## Starting From Scratch
@@ -120,6 +132,16 @@ mkdir local_postgres_data
 ```
 docker-compose -f compose.yml up
 ```
+
+This composition runs all the service with single shared db server and single database (for saving the resources of host computer)
+
+You also can find there 
+
+```bash
+up-db-per-service-compose.cmd
+```
+
+That runs all the services with separate db server.
 
 
 

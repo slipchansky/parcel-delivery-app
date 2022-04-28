@@ -1,0 +1,1 @@
+docker-compose -f db-per-service-compose.yml up
