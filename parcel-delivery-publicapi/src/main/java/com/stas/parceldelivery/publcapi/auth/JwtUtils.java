@@ -1,6 +1,7 @@
-package com.stas.parceldelivery.publcapi.config.jwt;
+package com.stas.parceldelivery.publcapi.auth;
 
 import java.util.Date;
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.stas.parceldelivery.publcapi.service.auth.UserSecurityDetailsImpl;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -27,9 +29,12 @@ public class JwtUtils {
 
 		UserSecurityDetailsImpl userPrincipal = (UserSecurityDetailsImpl) authentication.getPrincipal();
 
-		return Jwts.builder().setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
+		return Jwts.builder()
+				.setSubject(userPrincipal.getUsername())
+				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+				.signWith(SignatureAlgorithm.HS512, jwtSecret)
+				.compact();
 	}
 
 	public boolean validateJwtToken(String jwt) {
@@ -48,7 +53,8 @@ public class JwtUtils {
 	}
 
 	public String getUserNameFromJwtToken(String jwt) {
-		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody().getSubject();
+		Claims jvtBody = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody();
+		return jvtBody.getSubject();
 	}
 
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.stas.parceldelivery.commons.model.UserDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
-import com.stas.parceldelivery.publcapi.config.jwt.JwtUtils;
+import com.stas.parceldelivery.publcapi.auth.JwtUtils;
 import com.stas.parceldelivery.publcapi.dto.JwtResponse;
 import com.stas.parceldelivery.publcapi.dto.LoginRequest;
 import com.stas.parceldelivery.publcapi.service.UserService;
@@ -61,6 +61,7 @@ public class ResourceAuthentication extends BaseController {
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
 
+			
 			return ResponseEntity.ok(new JwtResponse(jwt, JwtResponse.TOKEN_TYPE, userDetails.getUsername(),
 					userDetails.getEmail(), roles));
 

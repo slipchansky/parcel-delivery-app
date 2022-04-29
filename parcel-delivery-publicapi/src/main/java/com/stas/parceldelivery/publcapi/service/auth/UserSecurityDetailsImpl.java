@@ -14,8 +14,9 @@ import com.stas.parceldelivery.commons.model.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class UserSecurityDetailsImpl implements UserDetails {
 
@@ -59,6 +60,4 @@ public class UserSecurityDetailsImpl implements UserDetails {
 				user.getPassword(), 
 				authorities);
 	}
-	
-
 }

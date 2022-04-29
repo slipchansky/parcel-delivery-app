@@ -4,6 +4,7 @@ from api_framework.all_apis import all_apis
 
 def test_from_create_to_finish():
     admin, courier, client = all_apis()
+
     courier_id = courier.user_id
     admin_id = admin.user_id
     client_id = client.user_id

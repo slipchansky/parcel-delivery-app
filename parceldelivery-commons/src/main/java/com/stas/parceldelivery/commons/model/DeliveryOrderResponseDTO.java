@@ -2,6 +2,7 @@ package com.stas.parceldelivery.commons.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 import io.swagger.annotations.ApiModel;
@@ -26,6 +27,7 @@ public class DeliveryOrderResponseDTO {
 
 	@ApiModelProperty(value = "The Addres where the Parcel should be taken")
 	private String addressFrom;
+	
 	@ApiModelProperty(value = "The Addres where the Parcel should be moved to")
 	private String addressTo;
 	
@@ -42,8 +44,10 @@ public class DeliveryOrderResponseDTO {
 	private DeliveryStatus status;
 	
 	@ApiModelProperty(value = "The Date and Time of Delivery Order creation")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss Z")
 	Date created;
 	
 	@ApiModelProperty(value = "The Date and Time of last Modifivation of Delivery Order")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss Z")
 	Date modified;
 }

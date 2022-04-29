@@ -1,5 +1,6 @@
 package com.stas.parceldelivery.commons.model;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +31,7 @@ public class ErrorResponse {
 	private List<String> message;
 	
 	@ApiModelProperty(value = "When the Error occured")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss Z")
 	private Date timeStamp = new Date();
 	
 	public static ErrorResponseBuilder builder() {
@@ -35,6 +39,12 @@ public class ErrorResponse {
 	}
 	
 	public static class ErrorResponseBuilder extends __ERB {
+		
+		public ErrorResponseBuilder() {
+			super();
+			super.timeStamp(new Date());
+		}
+		
 		public ErrorResponseBuilder exception(MethodArgumentNotValidException exception) {
 			super.message(exception.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.toList()));
 			return this;

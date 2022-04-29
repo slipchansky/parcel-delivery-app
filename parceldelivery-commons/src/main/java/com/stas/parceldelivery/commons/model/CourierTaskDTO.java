@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 import io.swagger.annotations.ApiModel;
@@ -50,9 +51,11 @@ public class CourierTaskDTO {
 	private DeliveryStatus status;
 	
 	@ApiModelProperty(value = "The Date when the Order was Created")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss Z")
 	private Date created;
 	
 	@ApiModelProperty(value = "The Date when the Order was Modified last time")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss Z")
 	private Date modified;
 
 }

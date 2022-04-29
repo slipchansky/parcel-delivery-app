@@ -4,7 +4,7 @@ from api_framework.env import base_url
 
 base_url = base_url()
 
-def test_unauthorized():
+def test_unauthenticated():
     response = requests.get(base_url+'/ap/v1/admin/couriers')
     assert response.status_code == 401
     response = requests.get(base_url+'/ap/v1/client/deliveries')

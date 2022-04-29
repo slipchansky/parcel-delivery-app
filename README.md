@@ -143,7 +143,13 @@ up-db-per-service-compose.cmd
 
 That runs all the services with separate db server.
 
+### Swagger API documentation
 
+Located at
+
+```
+http://localhost:8080/swagger-ui/
+```
 
 ### Perform acceptance tests
 

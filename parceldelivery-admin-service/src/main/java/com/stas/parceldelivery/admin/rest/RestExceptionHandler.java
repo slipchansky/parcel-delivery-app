@@ -80,7 +80,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	 
 	 ErrorResponse error = new ErrorResponse();
 		error.setStatus( HttpStatus.INTERNAL_SERVER_ERROR.value());
-		error.setTimeStamp(new Date());
 		List<String> errors = new ArrayList<>();
 		errors.add(ex.getLocalizedMessage());
 		error.setMessage(errors);

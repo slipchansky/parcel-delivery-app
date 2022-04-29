@@ -2,6 +2,7 @@ package com.stas.parceldelivery.commons.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stas.parceldelivery.commons.enums.DeliveryStatus;
 
 import io.swagger.annotations.ApiModel;
@@ -15,6 +16,7 @@ import lombok.*;
 @ApiModel(value = "Delivery Tracking Record")
 public class DeliveryTaskTraceDTO {
 	@ApiModelProperty(value = "When the record is Created")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss Z")
 	private Date created;
 	
 	@ApiModelProperty(value = "Who performed given act")

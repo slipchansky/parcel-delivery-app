@@ -1,4 +1,4 @@
-package com.stas.parceldelivery.publcapi.config.jwt;
+package com.stas.parceldelivery.publcapi.auth;
 
 import java.io.IOException;
 import java.util.List;

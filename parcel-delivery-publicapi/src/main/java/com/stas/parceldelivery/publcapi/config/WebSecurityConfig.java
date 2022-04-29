@@ -14,8 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.stas.parceldelivery.publcapi.config.jwt.AuthEntryPointJwt;
-import com.stas.parceldelivery.publcapi.config.jwt.AuthTokenFilter;
+import com.stas.parceldelivery.publcapi.auth.AuthEntryPointJwt;
+import com.stas.parceldelivery.publcapi.auth.AuthTokenFilter;
 import com.stas.parceldelivery.publcapi.service.auth.UserDetailsServiceImpl;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -24,50 +24,63 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
 	
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;
 	
 	@Autowired
-	private AuthEntryPointJwt unauthorizedHandler;
+	private AuthEntryPointJwt unauthenticatedHandler;
 	
-	@Bean
-	public AuthTokenFilter authenticationJwtTokenFilter() {
-		return new AuthTokenFilter();
-	}
-	
-	@Override
-	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-	}
 	
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-
+	
 	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	AuthTokenFilter authTokenFilter() {
+		return new AuthTokenFilter();
 	}
+	
+	@Override
+	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		authenticationManagerBuilder
+			.userDetailsService(userDetailsService)
+			.passwordEncoder(passwordEncoder());
+	}
+	
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.cors().and().csrf().disable()
-			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+			.exceptionHandling().authenticationEntryPoint(unauthenticatedHandler)
+			.and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
 			.authorizeRequests()
-			.antMatchers("/api/v1/auth/**", "/actuator/info", "/favicon.ico").permitAll()
-			.antMatchers("/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/v2/**", "/webjars/**").permitAll()
-				.anyRequest().authenticated();
+			.antMatchers(
+					"/api/v1/auth/**", 
+					"/actuator/info", 
+					"/favicon.ico", 
+					"/swagger-ui/**", 
+					"/swagger-ui.html", 
+					"/swagger-resources/**", 
+					"/v2/**", 
+					"/webjars/**"
+					).permitAll()
+			.anyRequest().authenticated();
 		
-		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-		
+		http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
-	
 	
 }
