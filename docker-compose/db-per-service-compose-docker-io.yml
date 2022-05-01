@@ -115,7 +115,6 @@ services:
 
   user-service:
     image: slipchansky/parceldelivery-user-service:latest
-    container_name: user-service
     links:
       - eureka-server
     healthcheck:
@@ -144,7 +143,6 @@ services:
 
   admin-service:
     image: slipchansky/parceldelivery-admin-service:latest
-    container_name: admin-service
     links:
       - eureka-server
     depends_on:
@@ -168,7 +166,6 @@ services:
 
   client-service:
     image: slipchansky/parceldelivery-client-service:latest
-    container_name: client-service
     links:
       - eureka-server
     depends_on:
@@ -192,7 +189,6 @@ services:
 
   courier-service:
     image: slipchansky/parceldelivery-courier-service:latest
-    container_name: courier-service
     links:
       - eureka-server
     depends_on:
@@ -216,11 +212,29 @@ services:
 
   public-api:
     image: slipchansky/parceldelivery-publicapi:latest
-    container_name: public-api
     links:
       - eureka-server
     environment:
       discovery_endpoint: 'http://eureka-server:3333/eureka'
     ports:
-      - 8080:8080
+      - 8080
+    labels:
+      - "traefik.enable=true"
+      -  traefik.port=8080
+      - "traefik.http.routers.public-api.rule=Host(`localhost`)"
+      - "traefik.http.routers.public-api.entrypoints=web"
 
+
+  traefik:
+     image: "traefik:latest"
+     container_name: "traefik"
+     command:
+      - "--log.level=INFO"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:8080"
+     ports:
+      - "8080:8080"
+     volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"

@@ -1,4 +1,4 @@
-﻿start cmd /c "call log courier-service"
+start cmd /c "call log courier-service"
 start cmd /c "call log admin-service"  
 start cmd /c "call log user-service"   
 start cmd /c "call log client-service"

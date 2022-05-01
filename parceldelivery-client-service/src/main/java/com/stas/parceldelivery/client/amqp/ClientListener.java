@@ -5,6 +5,7 @@ import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssign
 import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanged;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -13,6 +14,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.UnexpectedRollbackException;
 
@@ -54,7 +56,7 @@ public class ClientListener {
 	}
 
 	@RabbitListener(queues = ClientOrderAssigned)
-	public void onOrderAssigned(OrderAssignment payload, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
+	public void onOrderAssigned(OrderAssignment payload, Channel channel, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
 			deliveryService.deliveryAssigned(payload);
