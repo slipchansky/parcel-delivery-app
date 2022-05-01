@@ -1,1 +1,1 @@
-docker-compose -f compose.yml up
+docker-compose -f compose.yml up --scale public-api=2 --scale client-service=3

@@ -1,5 +1,5 @@
 from api_framework.all_apis import all_apis
-
+from time import sleep
 
 
 def test_from_create_to_finish():
@@ -13,6 +13,7 @@ def test_from_create_to_finish():
     response, body = admin.new_courier(courier_id)
     assert response.status_code == 200
     assert body['id'] == courier_id
+    sleep(1)
 
     # admin is able to find courier in list of all couriers
     response, body = admin.get_couriers()
@@ -35,6 +36,7 @@ def test_from_create_to_finish():
     assert body['status'] == "CREATED"
     assert body['created'] is not None
     assert body['modified'] == body['created']
+    sleep(1)
 
     #assert any(lambda i: i['id'] == courier_id for i in body) is True
     tracking_code = body['id']
@@ -90,6 +92,7 @@ def test_from_create_to_finish():
     assert body['state'] == "PROGRESS"
     assert body['assignee'] is not None
     assert body['assignee']['id'] == courier_id
+    sleep(1)
 
     # admin sees order by id among all tasks
     response, body = admin.get_tasks()
@@ -119,6 +122,7 @@ def test_from_create_to_finish():
     response, body = courier.start_task(id=tracking_code)
     assert response.status_code == 200
     assert body['status'] == 'INPROGRESS'
+    sleep(1)
 
     response, body = courier.get_task(tracking_code)
     assert response.status_code == 200
@@ -140,6 +144,7 @@ def test_from_create_to_finish():
     response, body = courier.set_location(tracking_code, 'point B')
     assert response.status_code == 200
     # TODO
+    sleep(1)
 
     response, body = courier.get_task(tracking_code)
     assert response.status_code == 200
@@ -159,6 +164,7 @@ def test_from_create_to_finish():
     # test courier finalizes delivery ###################################################
     response, body = courier.task_complete(tracking_code)
     assert response.status_code == 200
+    sleep(1)
 
     response, body = courier.get_tasks()
     assert response.status_code == 200
