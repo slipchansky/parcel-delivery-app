@@ -1,11 +1,17 @@
 # Parcel Delivery Service
 
 ## Task Description
-Tasks Description.pdf
+
 [Task Description]
+
+## Architecture diagram
+
+![Architecture Diagram](https://github.com/slipchansky/parcel-delivery-app/blob/main/doc/architecture.jpg)
 
 ### Disclaimer
 The proposed solution in this form is not a commercial product. This example is rather just a POC that should be elaborated in details. What is done and what is not is described here: [What is Done and What is Not]
+
+# How to work with
 
 ## Get the actual copy of project
 
