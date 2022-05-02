@@ -197,7 +197,7 @@ public class AmqpCourierExchangeITest {
 		final CountDownLatch latch = new CountDownLatch(2);
 		mockOnDummyCall(latch);
 		transmiter.locationChanged(mLocationChanged);
-		latch.await(1, TimeUnit.SECONDS);
+		latch.await(2, TimeUnit.SECONDS);
 		verifyDummyCalled(2);
 	}
 	

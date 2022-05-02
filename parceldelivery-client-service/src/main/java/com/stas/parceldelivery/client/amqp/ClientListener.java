@@ -45,9 +45,10 @@ public class ClientListener {
 	}
 
 	@RabbitListener(queues = ClientStatusChanged)
-	public void onStatusChanged(OrderStatusChanged payload, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
+	public void onStatusChanged(OrderStatusChanged payload, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
+			if(payload.getId()==null) return; // trash from testing
 			deliveryService.updateStatus(payload);
 		} catch (UnexpectedRollbackException  e) {
 			log.debug("Task not found {}", payload.getId());
@@ -59,6 +60,7 @@ public class ClientListener {
 	public void onOrderAssigned(OrderAssignment payload, Channel channel, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
+			if(payload.getId()==null) return; // trash from testing
 			deliveryService.deliveryAssigned(payload);
 		} catch (UnexpectedRollbackException  e) {
 			log.debug("Task not found {}", payload.getId());
@@ -66,9 +68,10 @@ public class ClientListener {
 	}
 
 	@RabbitListener(queues = ClientLocationChanged)
-	public void onLocationChanged(LocationChanged payload, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
+	public void onLocationChanged(LocationChanged payload, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
+			if(payload.getId()==null) return; // trash from testing
 			deliveryService.updateLocation(payload);
 		} catch (UnexpectedRollbackException  e) {
 			log.debug("Task not found {}", payload.getId());

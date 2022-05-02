@@ -3,9 +3,17 @@ package com.stas.parceldelivery.commons.exchange;
 import java.util.List;
 import java.util.UUID;
 
-import lombok.Data;
+import org.apache.logging.log4j.ThreadContext;
 
-@Data
+import com.stas.parceldelivery.commons.constants.ParceldeliveryHeaders;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Getter
+@Setter
 public class CallContext {
 	private final static InheritableThreadLocal<CallContext> CONTEXT_HOLDER = new InheritableThreadLocal<>();
 	private String userId;
@@ -37,6 +45,24 @@ public class CallContext {
 		return CONTEXT_HOLDER.get();
 	}
 
+	public void setCorrelationId(String correlationId) {
+		this.correlationId = correlationId;
+        ThreadContext.put(ParceldeliveryHeaders.CORRELATION_ID, correlationId);
+	}
 
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+        ThreadContext.put(ParceldeliveryHeaders.REQUEST_ID, requestId);
+	}
+
+	public void updateContext(String correlationId, String requestId) {
+		setCorrelationId(correlationId);
+		setRequestId(requestId);
+		updateCallTrace();
+	}
+
+	private void updateCallTrace() {
+		ThreadContext.put(ParceldeliveryHeaders.CALL_TRACE, "requestId="+this.requestId+", correlationId="+this.correlationId);
+	}
 
 }

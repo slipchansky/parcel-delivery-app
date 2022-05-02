@@ -3,6 +3,7 @@ package com.stas.parceldelivery.courier.amqp;
 import static com.stas.parceldelivery.commons.constants.Queues.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -11,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.UnexpectedRollbackException;
 
@@ -44,14 +46,13 @@ public class CourierListener {
 	}
 
 	@RabbitListener(queues = CourierTaskAssigned)
-	public void onOrderAssigned(CourierAssignedTask payload, Channel channel,
-			@Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+	public void onOrderAssigned(CourierAssignedTask payload, @Headers Map<String, Object> headers) throws IOException {
 
 		deliveryService.createCourierTask(payload);
 	}
 
 	@RabbitListener(queues = CourierOrderUpdated)
-	public void onOrderUpdated(OrderUpdated payload, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
+	public void onOrderUpdated(OrderUpdated payload, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
 			deliveryService.updateCourierTask(payload);
@@ -61,7 +62,7 @@ public class CourierListener {
 	}
 
 	@RabbitListener(queues = CourierOrderCancelled)
-	public void onOrderCancelled(OrderCancelled payload, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
+	public void onOrderCancelled(OrderCancelled payload, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
 			deliveryService.cancelCourierTask(payload);

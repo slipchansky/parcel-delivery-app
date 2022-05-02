@@ -14,6 +14,9 @@ public class AmqpConfiguration {
 	
 	@Bean
 	public AmqpAdmin admin(ConnectionFactory connectionFactory) {
+		org.springframework.amqp.core.Message m;
+		
+		
 		return new RabbitAdmin(connectionFactory);
 	}
 		

@@ -6,9 +6,12 @@ import static com.stas.parceldelivery.commons.constants.Queues.AdminOrderUpdated
 import static com.stas.parceldelivery.commons.constants.Queues.CourierOrderCancelled;
 import static com.stas.parceldelivery.commons.constants.Queues.CourierOrderUpdated;
 
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,9 @@ import com.stas.parceldelivery.commons.amqp.utils.ExchangeUtil;
 import com.stas.parceldelivery.commons.amqp.utils.QueueUtil;
 import com.stas.parceldelivery.commons.amqp.utils.TemplateUtil;
 import com.stas.parceldelivery.commons.constants.ExchangeName;
+import com.stas.parceldelivery.commons.constants.ParceldeliveryHeaders;
 import com.stas.parceldelivery.commons.constants.Routes;
+import com.stas.parceldelivery.commons.exchange.CallContext;
 
 
 @Component
@@ -37,6 +42,8 @@ public class ClientMessageTransmitter {
 	private RabbitTemplate orderCreated;
 	private RabbitTemplate orderUpdated;
 	private RabbitTemplate orderCancelled;
+	
+	
 	
 	
 	@PostConstruct

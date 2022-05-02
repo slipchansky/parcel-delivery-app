@@ -30,6 +30,7 @@ import org.springframework.boot.autoconfigure.web.reactive.function.client.WebCl
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.netflix.eureka.config.EurekaClientConfigServerAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -38,6 +39,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.stas.parceldelivery.client.amqp.ClientListener;
 import com.stas.parceldelivery.client.amqp.ClientMessageTransmitter;
 import com.stas.parceldelivery.client.service.DeliveryService;
+import com.stas.parceldelivery.commons.amqp.aspects.AmqlListenerAspect;
 import com.stas.parceldelivery.commons.amqp.messages.LocationChanged;
 import com.stas.parceldelivery.commons.amqp.messages.OrderAssignment;
 import com.stas.parceldelivery.commons.amqp.messages.OrderCancelled;
@@ -64,6 +66,11 @@ public class ClientAmqpExchangeITest {
 		    WebClientAutoConfiguration.class
 		})
 	public static class ClientAmqpTestApp {
+		
+		@Bean
+		AmqlListenerAspect aspect() {
+			return new AmqlListenerAspect();
+		}
 	}
 	
 	

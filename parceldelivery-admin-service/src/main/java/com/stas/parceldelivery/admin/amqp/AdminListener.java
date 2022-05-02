@@ -10,6 +10,7 @@ import static com.stas.parceldelivery.commons.constants.Queues.ClientOrderAssign
 import static com.stas.parceldelivery.commons.constants.Queues.ClientStatusChanged;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -18,6 +19,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.UnexpectedRollbackException;
 
@@ -51,7 +53,7 @@ public class AdminListener {
 	}
 
 	@RabbitListener(queues = AdminOrderCreated)
-	public void adminOnCreated(OrderCreated payload) throws IOException {
+	public void adminOnCreated(OrderCreated payload, @Headers Map<String, Object> headers) throws IOException {
 		try {
 		service.createOrder(payload);
 		} catch (UnexpectedRollbackException  e) {
@@ -60,7 +62,7 @@ public class AdminListener {
 	}
 
 	@RabbitListener(queues = AdminOrderUpdated)
-	public void adminOnUpdated(OrderUpdated payload) throws IOException {
+	public void adminOnUpdated(OrderUpdated payload, @Headers Map<String, Object> headers) throws IOException {
 		try {
 			service.updateOrder(payload);
 		} catch (UnexpectedRollbackException  e) {
@@ -69,7 +71,7 @@ public class AdminListener {
 	}
 
 	@RabbitListener(queues = AdminOrderCancelled)
-	public void onadminOnCancelles(OrderCancelled payload) throws IOException {
+	public void onadminOnCancelles(OrderCancelled payload, @Headers Map<String, Object> headers) throws IOException {
 		try {
 			service.cancelOrder(payload);
 		} catch (UnexpectedRollbackException  e) {
@@ -78,7 +80,7 @@ public class AdminListener {
 	}
 
 	@RabbitListener(queues = AdminStatusChanged)
-	public void onAdminStatusChanged(OrderStatusChanged payload) throws IOException {
+	public void onAdminStatusChanged(OrderStatusChanged payload, @Headers Map<String, Object> headers) throws IOException {
 		try {
 			service.changeStatus(payload);
 		} catch (UnexpectedRollbackException  e) {
@@ -87,7 +89,7 @@ public class AdminListener {
 	}
 
 	@RabbitListener(queues = AdminLocationChanged)
-	public void onAdminLocationChanged(LocationChanged payload) throws IOException {
+	public void onAdminLocationChanged(LocationChanged payload, @Headers Map<String, Object> headers) throws IOException {
 		try {
 			service.updateLocation(payload);
 		} catch (UnexpectedRollbackException e) {
