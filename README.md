@@ -1,7 +1,11 @@
 # Parcel Delivery Service
 
+## Task Description
+Tasks Description.pdf
+[Task Description]
+
 ### Disclaimer
-The proposed solution in this form is not a commercial product. This example is rather just a POC that should be elaborated in details. What is done and what is not is described here: [What is Done and What is Not] [whatisdoneandwhatisdont]
+The proposed solution in this form is not a commercial product. This example is rather just a POC that should be elaborated in details. What is done and what is not is described here: [What is Done and What is Not]
 
 ## Get the actual copy of project
 
@@ -163,4 +167,5 @@ pytest
 
 [//]: # (These are reference links used in the body of this note
 
-[whatisdoneandwhatisdont]: <https://github.com/slipchansky/parcel-delivery-app/blob/main/doc/whatisdoneadwhatisnot.md>
+[What is Done and What is Not]: <https://github.com/slipchansky/parcel-delivery-app/blob/main/doc/whatisdoneadwhatisnot.md>
+[Task Description]: <https://github.com/slipchansky/parcel-delivery-app/blob/main/doc/Tasks Description.pdf>
