@@ -19,10 +19,6 @@ Among them:
 
 - The PublicAPI module is implemented in a synchronous style, that is not good for handling the requests that should just  be delegate to downline. In a real project it would better use something like spring-flux.
 
-- I didn't implement bin validation at all. That may be done fairly straightforwardly, but it requires careful attention to each field to be validated and as a consequence that is time consuming task as for the test. 
-
-- I have introduced mechanisms for tracking call-flow by requestId and correlationId headers, but I have not provided an end-to-end correlationId transition within the inter-service exchange via AMQP.
-
 - I have not worked out in detail the error handling resulting in the processing of incoming messages from AMQP. 
 
 - I haven't implemented unit testing for Rest API. Development of such tests are also pretty time-consuming because of lot of details that should be checked.
