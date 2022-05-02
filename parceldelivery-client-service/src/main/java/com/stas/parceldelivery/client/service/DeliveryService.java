@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 import com.stas.parceldelivery.client.amqp.ClientMessageTransmitter;
 import com.stas.parceldelivery.client.domain.DeliveryOrder;
@@ -44,7 +45,7 @@ public class DeliveryService {
 	
 	
 	@Transactional
-	public DeliveryOrderResponseDTO create(String clientId, DeliveryOrderRequestDTO d) {
+	public DeliveryOrderResponseDTO create(String clientId, @Validated DeliveryOrderRequestDTO d) {
 		DeliveryOrder order = from(d).to(DeliveryOrder.class);
 		order.setClient(clientId);
 		order.setStatus(DeliveryStatus.CREATED);
@@ -58,7 +59,7 @@ public class DeliveryService {
 
 	
 	@Transactional
-	public DeliveryOrderResponseDTO update(String clientId, String id, UpdateDestinationRequest d) {
+	public DeliveryOrderResponseDTO update(String clientId, String id, @Validated UpdateDestinationRequest d) {
 		if(!StringUtils.hasText(d.getAddressTo())) {
 			// TODOO stas. move to bean validation
 			log.debug("You should send new address in request body");

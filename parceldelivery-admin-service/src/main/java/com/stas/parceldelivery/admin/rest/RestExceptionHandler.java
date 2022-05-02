@@ -1,8 +1,8 @@
 package com.stas.parceldelivery.admin.rest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,12 +49,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
     
-	@ExceptionHandler(ErrorFromUnderlyingService.class)
-	public final ResponseEntity<Object> handleUnderlyingServiceError(ErrorFromUnderlyingService ex, WebRequest request) {
-		return ResponseEntity.status(ex.getResponse().getStatus()).body(ex.getResponse());
-	}
-    
-    
     @ExceptionHandler(BadRequestException.class)
     public final ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
     	ErrorResponse response = ErrorResponse.builder()
@@ -75,16 +69,34 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
     
     
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-	 
-	 ErrorResponse error = new ErrorResponse();
-		error.setStatus( HttpStatus.INTERNAL_SERVER_ERROR.value());
-		List<String> errors = new ArrayList<>();
-		errors.add(ex.getLocalizedMessage());
-		error.setMessage(errors);
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	Optional<ErrorResponse> findRootCauseResponse(Throwable cursor) {
+		while (cursor.getClass() != Exception.class) {
+			if (cursor instanceof ErrorFromUnderlyingService) {
+				return Optional.of(((ErrorFromUnderlyingService) cursor).getResponse());
+			} 
+			cursor = cursor.getCause();
+		}
+		return Optional.empty();
+	}
+
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
+
+
+		ErrorResponse error;
 		
- }
+		Optional<ErrorResponse> possibleCause = findRootCauseResponse(ex);
+		if (possibleCause.isPresent()) {
+			error = possibleCause.get();
+		} else {
+			error = new ErrorResponse();
+			error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			List<String> errors = new ArrayList<>();
+			errors.add(ex.getLocalizedMessage());
+			error.setMessage(errors);
+		}
+		
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.resolve(error.getStatus()));
+	}
 
 }

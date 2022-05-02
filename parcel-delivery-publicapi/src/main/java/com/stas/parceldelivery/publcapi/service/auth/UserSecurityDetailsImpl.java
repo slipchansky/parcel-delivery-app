@@ -10,7 +10,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.SecurityUserResponseDTO;
+import com.stas.parceldelivery.commons.model.UserResponseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,7 +50,7 @@ public class UserSecurityDetailsImpl implements UserDetails {
 		return true;
 	}
 	
-	public static UserSecurityDetailsImpl fromUser(UserDTO user) {
+	public static UserSecurityDetailsImpl fromUser(SecurityUserResponseDTO user) {
 		List<GrantedAuthority> authorities = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.toString()))
 				.collect(Collectors.toList());

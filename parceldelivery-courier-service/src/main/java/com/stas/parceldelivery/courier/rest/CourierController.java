@@ -48,13 +48,13 @@ public class CourierController implements CourierContract {
 	}
 
 	@Override
-	public CourierTaskDTO startDeliverying(String courierId, String id) {
-		return service.startDeliverying(courierId, id);
+	public CourierTaskDTO acceptTask(String courierId, String id) {
+		return service.acceptTask(courierId, id);
 	}
 
 	@Override
-	public CourierTaskDTO finishDeliverying(String courierId, String id) {
-		return service.finishDeliverying(courierId, id);
+	public CourierTaskDTO finalizeTask(String courierId, String id) {
+		return service.finalizeTask(courierId, id);
 	}
 	
 	

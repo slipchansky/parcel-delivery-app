@@ -14,9 +14,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.validation.annotation.Validated;
 
 import com.stas.parceldelivery.commons.enums.Role;
-import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.NewUserRequestDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
 import com.stas.parceldelivery.publcapi.dto.ResponseBase;
 import com.stas.parceldelivery.publcapi.exceptions.InternalServerErrorRuntimeException;
@@ -38,7 +39,7 @@ public class UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	private UserResponseDTO createUser(UserDTO userdto) throws UserAlreadyExistsException {
+	private UserResponseDTO createUser(NewUserRequestDTO userdto) throws UserAlreadyExistsException {
 		// TODO. introduce bean validation
 		
 		if(userExistsService.userExists( userdto.getUsername(), userdto.getEmail()))
@@ -47,7 +48,7 @@ public class UserService {
 		
 		
 		if ( CollectionUtils.isEmpty(userdto.getRoles()) ) {
-			userdto.setRoles(UserDTO.JUST_USER);
+			userdto.setRoles(NewUserRequestDTO.JUST_USER);
 		} 
 		
 		try {
@@ -59,7 +60,7 @@ public class UserService {
 	}
 	
 	
-	public UserResponseDTO createClient(UserDTO u) throws UserAlreadyExistsException {
+	public UserResponseDTO registerUser(NewUserRequestDTO u) throws UserAlreadyExistsException {
 		Set<Role> roles = u.getRoles();
 		roles.remove(Role.ROLE_SUPER_ADMIN);
 		return createUser(u);

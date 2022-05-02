@@ -100,7 +100,7 @@ public class ResourceCourier extends BaseController {
 	})
 	@PostMapping(TASKS_GIVEN)
 	public CourierTaskDTO startDeliverying(@PathVariable(TASK_ID) String id) {
-		return call(c -> service.startDeliverying(c.getUserId(), id));
+		return call(c -> service.acceptTask(c.getUserId(), id));
 	}
 
 	@ApiOperation(value = "Finalize Parcel Delivery by Tracking Number",
@@ -117,7 +117,7 @@ public class ResourceCourier extends BaseController {
 	})
 	@DeleteMapping(TASKS_GIVEN)
 	public CourierTaskDTO finishDeliverying(@PathVariable(TASK_ID) String id) {
-		return call(c -> service.finishDeliverying(c.getUserId(), id));
+		return call(c -> service.finalizeTask(c.getUserId(), id));
 	}
 
 }

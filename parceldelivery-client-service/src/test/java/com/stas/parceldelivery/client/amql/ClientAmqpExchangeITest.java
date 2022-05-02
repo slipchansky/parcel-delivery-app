@@ -51,7 +51,7 @@ import com.stas.parceldelivery.commons.constants.ExchangeName;
 import com.stas.parceldelivery.commons.constants.Queues;
 import com.stas.parceldelivery.commons.constants.Routes;
 
-//@Testcontainers
+@Testcontainers
 @SpringBootTest(classes = {ClientAmqpExchangeITest.ClientAmqpTestApp.class, ClientListener.class, TestListener.class, ClientMessageTransmitter.class})
 @ComponentScan("com.stas.parceldelivery.client.amqp")
 public class ClientAmqpExchangeITest {
@@ -68,9 +68,9 @@ public class ClientAmqpExchangeITest {
 	
 	
 
-//	@Container
-//	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
-//	.withExposedPorts(5672, 15672);
+	@Container
+	private static final RabbitMQContainer RABBIT_CONTAINER = new RabbitMQContainer("rabbitmq:management")
+	.withExposedPorts(5672, 15672);
 
 	@Autowired
 	ConnectionFactory connectionFactory;

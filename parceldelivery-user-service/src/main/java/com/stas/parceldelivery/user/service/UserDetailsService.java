@@ -3,9 +3,11 @@ package com.stas.parceldelivery.user.service;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import com.stas.parceldelivery.user.domain.UserDetails;
@@ -22,8 +24,12 @@ public class UserDetailsService {
 	@Autowired
 	UserDetailsRepository userDetailsRepository;
 	
+	@Autowired
+	Validator validator;
+	
 	@Transactional
-	public UserDetailsDTO save(String id, UserDetailsDTO d) {
+	// allows partial updates
+	public UserDetailsDTO update(String id, UserDetailsDTO delta) {
 		UserDetails userDetails;
 		Optional<UserDetails> found = userDetailsRepository.findById(id);
 		if(found.isPresent()) {
@@ -33,21 +39,22 @@ public class UserDetailsService {
 			userDetails.setId(id);
 			log.debug("New user details arrived for {}", id);
 		}
-		userDetails = from(userDetails).with(d);
+		userDetails = from(userDetails).with(delta);
+		
+		// as we allow partial update we should validate details only after partial merge of request to existing details 
 		validate(userDetails);
 		
 		UserDetails result = userDetailsRepository.save(
 				userDetails
 				);
 		
-		log.debug("User updated: {}", d);
+		log.debug("User updated: {}", delta);
 		return from(result).to(UserDetailsDTO.class);
 	}
 
 
 	private void validate(UserDetails userDetails) {
-		// TODO stas. implement that
-		
+		validator.validate(userDetails);
 	}
 
 

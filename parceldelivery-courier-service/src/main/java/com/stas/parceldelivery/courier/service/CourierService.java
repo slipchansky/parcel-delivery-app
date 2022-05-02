@@ -109,7 +109,7 @@ public class CourierService {
 	}
 	
 	@Transactional
-	public CourierTaskDTO  startDeliverying(String courierId, String id) {
+	public CourierTaskDTO  acceptTask(String courierId, String id) {
 		CourierTask task = findTaskOrThrowError(courierId, id);
 		task.setStatus(DeliveryStatus.INPROGRESS);
 		tasks.save(task);
@@ -118,7 +118,7 @@ public class CourierService {
 	}
 	
 	@Transactional
-	public CourierTaskDTO  finishDeliverying(String courierId, String id) {
+	public CourierTaskDTO  finalizeTask(String courierId, String id) {
 		CourierTask task = findTaskOrThrowError(courierId, id);
 		tasks.delete(task); // that is up to discussion
 		transmitter.statusChanged(OrderStatusChanged.builder().id(id).status(DeliveryStatus.FINISHED).build());

@@ -17,8 +17,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.stas.parceldelivery.admin.domain.Courier;
 import com.stas.parceldelivery.admin.repository.CourierRepository;
 import com.stas.parceldelivery.commons.enums.CourierStatus;
-import com.stas.parceldelivery.commons.model.CourierDTO;
-import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.NewUserRequestDTO;
+import com.stas.parceldelivery.commons.model.SecurityUserResponseDTO;
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
@@ -54,14 +54,14 @@ public class CourierServiceTest {
 			.city(city)
 			.build();
 	
-	private final static UserDTO user = new UserDTO(userId, email, null);
+	private final static NewUserRequestDTO user = new NewUserRequestDTO(userId, email, null);
 	
-	private final static Courier courier = CourierService.userToCourier(user, userDetails);
+	private final static Courier courier = CourierService.userToCourier(from(user).to(SecurityUserResponseDTO.class), userDetails);
 	
 	
 	@Test
 	public void testUserDetailsMerging() {
-		Courier c = service.userToCourier(user, userDetails);
+		Courier c = service.userToCourier(from(user).to(SecurityUserResponseDTO.class), userDetails);
 		assertEquals(userId, c.getId());
 		assertEquals(firstName, c.getFirstName());
 		assertEquals(lastName, c.getLastName());
@@ -74,7 +74,7 @@ public class CourierServiceTest {
 	@Test
 	public void retrieveCourierFromUserTest() {
 		when(userService.getDetails(anyString())).thenReturn(userDetails);
-		when(userService.get(anyString())).thenReturn(user);
+		when(userService.get(anyString())).thenReturn(from(user).to(SecurityUserResponseDTO.class));
 		
 		Courier c = service.retrieveCourierFromUser(userId);
 		assertEquals(userId, c.getId());
@@ -89,7 +89,7 @@ public class CourierServiceTest {
 	@Test
 	public void registerCourierTest() {
 		when(userService.getDetails(anyString())).thenReturn(userDetails);
-		when(userService.get(anyString())).thenReturn(user);
+		when(userService.get(anyString())).thenReturn(from(user).to(SecurityUserResponseDTO.class));
 		when(repository.save(any(Courier.class))).then(returnsFirstArg());
 		
 		Courier c = service.retrieveCourierFromUser(userId);

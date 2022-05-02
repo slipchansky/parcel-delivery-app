@@ -78,7 +78,7 @@ public class ErrorResponse {
 		}
 
 		public ErrorResponseBuilder status(HttpStatus status) {
-			super.status(status.ordinal());
+			super.status(status.value());
 			return this;
 		}
 

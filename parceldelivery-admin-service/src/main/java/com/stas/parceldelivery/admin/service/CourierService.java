@@ -7,7 +7,7 @@ import com.stas.parceldelivery.admin.domain.Courier;
 import com.stas.parceldelivery.admin.repository.CourierRepository;
 import com.stas.parceldelivery.commons.enums.CourierStatus;
 import com.stas.parceldelivery.commons.model.CourierDTO;
-import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.SecurityUserResponseDTO;
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import static com.stas.parceldelivery.commons.util.BeanConverter.*;
 
@@ -38,13 +38,13 @@ public class CourierService {
 	}
 
 	Courier retrieveCourierFromUser(String userId) {
-		UserDTO user = userService.get(userId);
+		SecurityUserResponseDTO user = userService.get(userId);
 		UserDetailsDTO details = userService.getDetails(userId);
 		Courier courier = userToCourier(user, details);
 		return courier;
 	}
 
-	static Courier userToCourier(UserDTO user, UserDetailsDTO details) {
+	static Courier userToCourier(SecurityUserResponseDTO user, UserDetailsDTO details) {
 		Courier courier = from(details).to(Courier.class);
 		courier = from(courier).with(user);
 		courier.setId(user.getUsername());

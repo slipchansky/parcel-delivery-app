@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.stas.parceldelivery.commons.enums.Role;
-import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.NewUserRequestDTO;
+import com.stas.parceldelivery.commons.model.SecurityUserResponseDTO;
 import com.stas.parceldelivery.commons.model.UserDetailsDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
 
@@ -24,13 +25,13 @@ public interface UsersContract {
 	public List<UserResponseDTO> list(@RequestParam(P_ROLE) Role role);
 	
 	@GetMapping(USER)
-	public UserDTO get(@PathVariable(P_USER_ID) String userId);
+	public SecurityUserResponseDTO get(@PathVariable(P_USER_ID) String userId);
 	
 	@RequestMapping(value = USERS, method = RequestMethod.HEAD)
 	public ResponseEntity<?> headOfUserExists(@RequestParam(P_USER_ID) String userId, @RequestParam(P_USER_EMAIL) String email);
 
 	@PostMapping(USERS)
-	public UserResponseDTO save(@RequestBody UserDTO user);
+	public UserResponseDTO save(@RequestBody NewUserRequestDTO user);
 	
 	@PostMapping(USER_DETAILS)
 	public UserDetailsDTO update(@PathVariable(P_USER_ID) String userId, @RequestBody UserDetailsDTO d);

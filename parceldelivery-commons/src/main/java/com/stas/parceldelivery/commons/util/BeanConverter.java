@@ -16,6 +16,12 @@ import org.apache.commons.beanutils.BeanMap;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+
+/*
+ * Here is a trick for transferring the values of same-named fields between beans.
+ * I realize that this trick in general may cause the issues but in real life I would introduce additional unit 
+ * tests for fixing the matching of beans by their fields. 
+ * */
 public class BeanConverter {
 	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	static {
@@ -35,7 +41,7 @@ public class BeanConverter {
 	
 	
 	@AllArgsConstructor
-	public static class ___ConversionContext<R> {
+	public static class ConversionContext<R> {
 		private R bean;
 		public <R> R to(Class<R> clazz) {
 			return BeanConverter.convert(bean, clazz);
@@ -60,11 +66,11 @@ public class BeanConverter {
 			return (R)bean;
 		}
 
-		public <T> ___ConversionContext<T> convert(Class<T> clazz) {
-			return new ___ConversionContext<T>(to(clazz));
+		public <T> ConversionContext<T> convert(Class<T> clazz) {
+			return new ConversionContext<T>(to(clazz));
 		}
 		
-		public ___ConversionContext<R> update(Consumer<R> action) {
+		public ConversionContext<R> update(Consumer<R> action) {
 			action.accept(bean);
 			return this; 
 		}
@@ -73,19 +79,14 @@ public class BeanConverter {
 			return bean;
 		}
 		
-		public ___ConversionContext<R> clone() {
+		public ConversionContext<R> clone() {
 			this.bean = (R)BeanConverter.convert(bean, bean.getClass());
 			return this;
 		}
 		
 	}
 	
-	public static <T> ___ConversionContext<T> from(T bean) {
-		return new ___ConversionContext<>(bean); 
+	public static <T> ConversionContext<T> from(T bean) {
+		return new ConversionContext<>(bean); 
 	}
-	
-	
-	
-	
-	
 }

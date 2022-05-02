@@ -9,6 +9,10 @@ public class ErrorFromUnderlyingService extends Exception {
 		this.response = response;
 	}
 	
+	public ErrorFromUnderlyingService(Exception e) {
+		super(e);
+	}
+
 	public ErrorResponse getResponse() {
 		return response;
 	}

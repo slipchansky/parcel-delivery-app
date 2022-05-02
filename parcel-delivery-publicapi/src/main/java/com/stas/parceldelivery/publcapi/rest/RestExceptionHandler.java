@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import com.stas.parceldelivery.commons.exceptions.ErrorFromUnderlyingService;
 import com.stas.parceldelivery.commons.exceptions.NotFoundException;
 import com.stas.parceldelivery.commons.model.ErrorResponse;
 import com.stas.parceldelivery.publcapi.exceptions.SilentExceptionWrapper;
+import com.stas.parceldelivery.publcapi.exceptions.UserAlreadyExistsException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -56,41 +58,46 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		ErrorResponse response = ErrorResponse.builder().messages(ex.getMessage()).status(HttpStatus.CONFLICT).build();
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
-	
-	@ExceptionHandler(ErrorFromUnderlyingService.class)
-	public final ResponseEntity<Object> handleUnderlyingServiceError(ErrorFromUnderlyingService ex, WebRequest request) {
-		return ResponseEntity.status(ex.getResponse().getStatus()).body(ex.getResponse());
-	}
-	
-	
-	@ExceptionHandler(SilentExceptionWrapper.class)
-	public final ResponseEntity<Object> handleSilentError(SilentExceptionWrapper ex, WebRequest request) {
-		return handleAllExceptions((Exception)ex.getCause(), request);
+
+	Optional<ErrorResponse> findRootCauseResponse(Throwable cursor) {
+		while (cursor.getClass() != Exception.class) {
+			if (cursor instanceof ErrorFromUnderlyingService) {
+				return Optional.of(((ErrorFromUnderlyingService) cursor).getResponse());
+			} else if (cursor instanceof SilentExceptionWrapper) {
+				return Optional.of(ErrorResponse.builder().messages(cursor.getMessage())
+				.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+			}
+			cursor = cursor.getCause();
+		}
+		return Optional.empty();
 	}
 
-	
 	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+	public final ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
 
-		ErrorResponse error = new ErrorResponse();
-		error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-		List<String> errors = new ArrayList<>();
-		errors.add(ex.getLocalizedMessage());
-		error.setMessage(errors);
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		ErrorResponse error;
+		
+		Optional<ErrorResponse> possibleCause = findRootCauseResponse(ex);
+		if (possibleCause.isPresent()) {
+			error = possibleCause.get();
+		} else {
+			error = new ErrorResponse();
+			error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			List<String> errors = new ArrayList<>();
+			errors.add(ex.getLocalizedMessage());
+			error.setMessage(errors);
+		}
+		
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.resolve(error.getStatus()));
 	}
-	
+
 	@ExceptionHandler(AccessDeniedException.class)
 	public final ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-				ErrorResponse.builder()
-				.status(HttpStatus.FORBIDDEN)
-				.message("Forbidden")
-				.build()
-		);
+		return ResponseEntity.status(HttpStatus.FORBIDDEN)
+				.body(ErrorResponse.builder().status(HttpStatus.FORBIDDEN).message("Forbidden").build());
 	}
-	
-	
+
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public final ResponseEntity<Object> handleUserNotFound(UsernameNotFoundException ex, WebRequest request) {
 		ErrorResponse error = new ErrorResponse();

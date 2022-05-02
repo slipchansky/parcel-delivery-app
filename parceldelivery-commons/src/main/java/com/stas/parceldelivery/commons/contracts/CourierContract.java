@@ -31,12 +31,12 @@ public interface CourierContract {
 			@RequestParam(CourierRoutes.P_LOCATION) String location);
 
 	@PostMapping(COURIER_GIVEN+TASKS_GIVEN)
-	CourierTaskDTO startDeliverying(
+	CourierTaskDTO acceptTask(
 			@PathVariable(CourierRoutes.COURIER_ID) String courierId, 
 			@PathVariable(CourierRoutes.TASK_ID) String id);
 
 	@DeleteMapping(COURIER_GIVEN+TASKS_GIVEN)
-	CourierTaskDTO finishDeliverying(
+	CourierTaskDTO finalizeTask(
 			@PathVariable(CourierRoutes.COURIER_ID) String courierId, 
 			@PathVariable(CourierRoutes.TASK_ID) String id);
 

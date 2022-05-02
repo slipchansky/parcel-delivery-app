@@ -3,6 +3,8 @@ package com.stas.parceldelivery.publcapi.rest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stas.parceldelivery.commons.model.UserDTO;
+import com.stas.parceldelivery.commons.model.NewUserRequestDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
 import com.stas.parceldelivery.publcapi.auth.JwtUtils;
 import com.stas.parceldelivery.publcapi.dto.JwtResponse;
@@ -73,8 +75,8 @@ public class ResourceAuthentication extends BaseController {
             nickname = "Signup",
             tags = "")
 	@PostMapping("/signup")
-	public UserResponseDTO registerClient(@RequestBody UserDTO signupRequest) {
-		return call(c -> userService.createClient(signupRequest));
+	public UserResponseDTO registerClient(@RequestBody @Valid NewUserRequestDTO signupRequest) {
+		return call(c -> userService.registerUser(signupRequest));
 	}
 
 }
