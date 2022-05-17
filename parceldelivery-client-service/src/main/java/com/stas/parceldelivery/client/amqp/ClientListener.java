@@ -48,7 +48,6 @@ public class ClientListener {
 	public void onStatusChanged(OrderStatusChanged payload, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
-			if(payload.getId()==null) return; // trash from testing
 			deliveryService.updateStatus(payload);
 		} catch (UnexpectedRollbackException  e) {
 			log.debug("Task not found {}", payload.getId());
@@ -60,7 +59,6 @@ public class ClientListener {
 	public void onOrderAssigned(OrderAssignment payload, Channel channel, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
-			if(payload.getId()==null) return; // trash from testing
 			deliveryService.deliveryAssigned(payload);
 		} catch (UnexpectedRollbackException  e) {
 			log.debug("Task not found {}", payload.getId());
@@ -71,7 +69,6 @@ public class ClientListener {
 	public void onLocationChanged(LocationChanged payload, @Headers Map<String, Object> headers)
 			throws IOException {
 		try {
-			if(payload.getId()==null) return; // trash from testing
 			deliveryService.updateLocation(payload);
 		} catch (UnexpectedRollbackException  e) {
 			log.debug("Task not found {}", payload.getId());

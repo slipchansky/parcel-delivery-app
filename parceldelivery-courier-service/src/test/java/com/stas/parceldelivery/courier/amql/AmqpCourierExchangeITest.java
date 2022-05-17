@@ -86,7 +86,6 @@ public class AmqpCourierExchangeITest {
 	private final static OrderCancelled mOrderCancelled = new OrderCancelled("o");
 	private final static OrderStatusChanged mOrderStatusChanged = new OrderStatusChanged("o");
 	private final static LocationChanged mLocationChanged = new LocationChanged("o");
-	
 
 
 	@PostConstruct

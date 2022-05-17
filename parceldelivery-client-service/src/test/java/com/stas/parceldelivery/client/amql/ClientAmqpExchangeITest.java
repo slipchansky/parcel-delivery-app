@@ -110,11 +110,14 @@ public class ClientAmqpExchangeITest {
 	private RabbitTemplate statusChanged;
 
 	private final static OrderCreated mOrderCreated = new OrderCreated();
-	private final static OrderAssignment mAssignment = new OrderAssignment();
-	private final static OrderCancelled mOrderCancelled = new OrderCancelled();
-	private final static OrderUpdated mOrderUpdated = new OrderUpdated();
-	private final static OrderStatusChanged mStatusChanged = new OrderStatusChanged();
-	private final static LocationChanged mLocationChanged = new LocationChanged();
+
+	private static final String ID = "idvale";
+	
+	private final static OrderAssignment mAssignment = OrderAssignment.builder().id(ID).build();
+	private final static OrderCancelled mOrderCancelled = OrderCancelled.builder().id(ID).build();
+	private final static OrderUpdated mOrderUpdated = OrderUpdated.builder().id(ID).build();
+	private final static OrderStatusChanged mStatusChanged = OrderStatusChanged.builder().id(ID).build();
+	private final static LocationChanged mLocationChanged = LocationChanged.builder().id(ID).build();
 
 	@PostConstruct
 	public void init() {

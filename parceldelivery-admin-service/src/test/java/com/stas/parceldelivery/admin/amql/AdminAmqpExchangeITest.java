@@ -48,7 +48,15 @@ import com.stas.parceldelivery.commons.constants.Routes;
 
 @SpringBootTest(classes = {AdminAmqpExchangeITest.AdminAmqpTestApp.class, AdminListener.class, TestListener.class, AdminMessageTransmitter.class})
 public class AdminAmqpExchangeITest  {
-	
+
+	private final static String ID = "ID";
+	private static final OrderCancelled mOrderCancelled = OrderCancelled.builder().id(ID).build();
+	private static final LocationChanged mLocationChanged = LocationChanged.builder().id(ID).build();
+	private static final OrderStatusChanged mOrderStatusChanged = OrderStatusChanged.builder().id(ID).build();
+	private static final OrderUpdated mOrderUpdated = OrderUpdated.builder().id(ID).build();
+	private static final OrderCreated mOrderCreated = OrderCreated.builder().id(ID).build();
+
+
 	@SpringBootApplication(exclude = {
 		    DataSourceAutoConfiguration.class, 
 		    DataSourceTransactionManagerAutoConfiguration.class, 
@@ -180,7 +188,7 @@ public class AdminAmqpExchangeITest  {
 		mockOnServiceCall(latch).createOrder(any(OrderCreated.class));
 		mockOnDummyCall(latch);
 		
-		orderCreated.convertAndSend(new OrderCreated());
+		orderCreated.convertAndSend(mOrderCreated);
 		
 		latch.await(1, TimeUnit.SECONDS);
 		verifyServiceCalled(1).createOrder(any(OrderCreated.class));
@@ -192,7 +200,7 @@ public class AdminAmqpExchangeITest  {
 		
 		mockOnServiceCall(latch).updateOrder(any(OrderUpdated.class));;
 		mockOnDummyCall(latch);
-		orderUpdated.convertAndSend(new OrderUpdated());
+		orderUpdated.convertAndSend(mOrderUpdated);
 		latch.await(1, TimeUnit.SECONDS);
 		verifyServiceCalled(1).updateOrder(any(OrderUpdated.class));;
 	}
@@ -201,7 +209,7 @@ public class AdminAmqpExchangeITest  {
 	public void changeStatusListenTest() throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch (1);
 		mockOnServiceCall(latch).changeStatus(any(OrderStatusChanged.class));;
-		statusChanged.convertAndSend(new OrderStatusChanged());
+		statusChanged.convertAndSend(mOrderStatusChanged);
 		latch.await(1, TimeUnit.SECONDS);
 		verifyServiceCalled(1).changeStatus(any(OrderStatusChanged.class));;
 	}
@@ -210,7 +218,7 @@ public class AdminAmqpExchangeITest  {
 	public void updateLocationListenTest() throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch (1);
 		mockOnServiceCall(latch).updateLocation(any(LocationChanged.class));
-		locationChanged.convertAndSend(new LocationChanged());
+		locationChanged.convertAndSend(mLocationChanged);
 		latch.await(1, TimeUnit.SECONDS);
 		verifyServiceCalled(1).updateLocation(any(LocationChanged.class));
 	}
@@ -223,7 +231,7 @@ public class AdminAmqpExchangeITest  {
 		mockOnServiceCall(latch).cancelOrder(any(OrderCancelled.class));
 		mockOnDummyCall(latch);
 		
-		orderCancelled.convertAndSend(new OrderCancelled());
+		orderCancelled.convertAndSend(mOrderCancelled);
 		latch.await(1, TimeUnit.SECONDS);
 		verifyServiceCalled(1).cancelOrder(any(OrderCancelled.class));
 		
