@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +59,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		ErrorResponse response = ErrorResponse.builder().messages(ex.getMessage()).status(HttpStatus.CONFLICT).build();
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public final ResponseEntity<Object> handleBadCredentials(BadCredentialsException ex, WebRequest request) {
+		ErrorResponse response = ErrorResponse.builder().messages(ex.getMessage()).status(HttpStatus.UNAUTHORIZED).build();
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+	}
+	
 
 	Optional<ErrorResponse> findRootCauseResponse(Throwable cursor) {
 		while (cursor.getClass() != Exception.class) {

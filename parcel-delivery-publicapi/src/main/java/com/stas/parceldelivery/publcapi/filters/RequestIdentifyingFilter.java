@@ -14,12 +14,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @WebFilter(filterName = "requestCountingFilter")
 public class RequestIdentifyingFilter implements Filter {
-    private static final Logger LOG = LoggerFactory.getLogger("http");
+    private static final Logger LOG = LoggerFactory.getLogger(RequestIdentifyingFilter.class);
     private AtomicLong requestCounter = new AtomicLong(0);
-    
-    @Override
-    public void init(FilterConfig filterConfig) {
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -29,7 +25,4 @@ public class RequestIdentifyingFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    @Override
-    public void destroy() {
-    }
 }

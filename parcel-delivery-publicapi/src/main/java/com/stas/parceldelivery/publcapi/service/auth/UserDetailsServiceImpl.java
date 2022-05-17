@@ -1,5 +1,6 @@
 package com.stas.parceldelivery.publcapi.service.auth;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -7,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.stas.parceldelivery.commons.model.SecurityUserResponseDTO;
-import com.stas.parceldelivery.commons.model.UserResponseDTO;
 import com.stas.parceldelivery.publcapi.service.UserServiceClient;
 
 
@@ -21,11 +21,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		try {
 			SecurityUserResponseDTO user = userServiceClient.get(username);
-			return UserSecurityDetailsImpl.fromUser(user);
+			return UserDetailsImpl.fromUser(user);
 		} catch (Exception e) {
 			throw new UsernameNotFoundException("User Not Found with username: " + username);
 		} 
 		
 	}
-
+	
 }

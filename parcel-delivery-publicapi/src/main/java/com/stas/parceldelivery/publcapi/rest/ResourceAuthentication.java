@@ -20,11 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.stas.parceldelivery.commons.model.NewUserRequestDTO;
 import com.stas.parceldelivery.commons.model.UserResponseDTO;
-import com.stas.parceldelivery.publcapi.auth.JwtUtils;
 import com.stas.parceldelivery.publcapi.dto.JwtResponse;
 import com.stas.parceldelivery.publcapi.dto.LoginRequest;
+import com.stas.parceldelivery.publcapi.service.AuthService;
 import com.stas.parceldelivery.publcapi.service.UserService;
-import com.stas.parceldelivery.publcapi.service.auth.UserSecurityDetailsImpl;
+import com.stas.parceldelivery.publcapi.service.auth.UserDetailsImpl;
+import com.stas.parceldelivery.publcapi.utils.JwtUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,9 +44,11 @@ public class ResourceAuthentication extends BaseController {
 
 	@Autowired
 	UserService userService;
-
+	
+	
 	@Autowired
-	JwtUtils jwtUtils;
+	AuthService authService;
+
 
 	@ApiOperation(value = "User Login API",
             nickname = "Login",
@@ -53,19 +56,13 @@ public class ResourceAuthentication extends BaseController {
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> authUser(@RequestBody LoginRequest loginRequest) {
 		return call(c -> {
-			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			String jwt = jwtUtils.generateJwtToken(authentication);
-
-			UserSecurityDetailsImpl userDetails = (UserSecurityDetailsImpl) authentication.getPrincipal();
-			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-					.collect(Collectors.toList());
-
 			
-			return ResponseEntity.ok(new JwtResponse(jwt, JwtResponse.TOKEN_TYPE, userDetails.getUsername(),
-					userDetails.getEmail(), roles));
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(
+							loginRequest.getUsername(), 
+							loginRequest.getPassword())
+			);
+			return ResponseEntity.ok(authService.createAuthenticationToken(authentication));
 
 		});
 	}

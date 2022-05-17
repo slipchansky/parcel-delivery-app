@@ -19,7 +19,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserSecurityDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
 	private String username;
 	private String email;
@@ -50,12 +50,12 @@ public class UserSecurityDetailsImpl implements UserDetails {
 		return true;
 	}
 	
-	public static UserSecurityDetailsImpl fromUser(SecurityUserResponseDTO user) {
+	public static UserDetailsImpl fromUser(SecurityUserResponseDTO user) {
 		List<GrantedAuthority> authorities = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.toString()))
 				.collect(Collectors.toList());
 		
-		return new UserSecurityDetailsImpl(
+		return new UserDetailsImpl(
 				user.getUsername(), 
 				user.getEmail(), 
 				user.getPassword(), 

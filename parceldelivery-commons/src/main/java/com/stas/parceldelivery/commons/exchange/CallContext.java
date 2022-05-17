@@ -17,7 +17,6 @@ import lombok.Setter;
 public class CallContext {
 	private final static InheritableThreadLocal<CallContext> CONTEXT_HOLDER = new InheritableThreadLocal<>();
 	private String userId;
-	private List<String> roles;
 	private String correlationId;
 	private String requestId;
 	 
